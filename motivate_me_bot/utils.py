@@ -8,25 +8,7 @@ import numpy as np
 import sys
 import os
 
-def average_color(img, box_dims, inverse=True):
-
-    r_tot = 0
-    g_tot = 0
-    b_tot = 0
-    cropped_img = img.crop(box_dims)
-    rgb_data = cropped_img.getdata()
-    for (r,g,b) in rgb_data:
-        r_tot += r
-        g_tot += g
-        b_tot += b
-    pixel_num = len(rgb_data)
-    averages = (int(np.round(r_tot / pixel_num)),
-            int(np.round(g_tot / pixel_num)),
-            int(np.round(b_tot / pixel_num)))
-    if inverse:
-        return tuple([(255-x) for x in averages])
-    else:
-        return averages
+from image_analysis import average_color, contrast_color
 
 def get_image(image_path):
     return Image.open(image_path)
@@ -37,8 +19,10 @@ def get_box_dims(img):
     boundary = int(img_height / 15)
     box_x = boundary
     box_y = boundary
+    # box_y = int(img_height / 4)
     box_width = int(img_width - 2 * box_x)
     box_height = int(img_height / 2 - 2 * box_y)
+    # box_height = int(img_height / 2)
 
     return (box_x, box_y, box_width, box_height)
 
@@ -134,6 +118,7 @@ def draw_quote_in_box(img,
                       font_file='Apple Chancery.ttf',
                       font_size=12,
                       color=(255,255,255),
+                      use_average_color=False,
                       spacing=1,
                       equal_spacing=True,
                       max_char_height=None,
@@ -141,6 +126,8 @@ def draw_quote_in_box(img,
     draw = ImageDraw.Draw(img)
     img_width, img_height = img.size
     boundary = int(img_height / 15)
+    sig_size = int(boundary / 2)
+    blur_boundary = int(boundary / 8)
 
     box_x, box_y, box_width, box_height = box_dims
 
@@ -154,6 +141,19 @@ def draw_quote_in_box(img,
         text_block_height = max_char_height * (len(all_lines) + 1) * spacing * 1.2
     else:
         text_block_height = max_char_height * ((len(all_lines) - 1) * spacing * 1.2 + 1)
+
+    box_x, box_y, box_width, box_height = box_dims
+    background_box = (box_x - blur_boundary, box_y - blur_boundary,
+                      box_x + blur_boundary + box_width, box_y + blur_boundary + box_height)
+
+    region = img.crop(background_box)
+    region = region.filter( ImageFilter.GaussianBlur(radius=blur_boundary / 2))
+    img.paste(region, background_box)
+
+    if use_average_color:
+        color = average_color(img, background_box, inverse=True)
+        color = contrast_color(img, background_box)
+        print(color)
 
     # text = "Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text "
     for i, line in enumerate(all_lines):
@@ -177,7 +177,11 @@ def draw_quote_in_box(img,
         draw.line((box_x + box_width, box_y + box_height, box_x, box_y + box_height), width=line_width)
         draw.line((box_x + box_width, box_y + box_height + line_width / 2 - 1, box_x + box_width, box_y - line_width / 2 + 1), width=line_width)
 
-def draw_signature(img, user='@MotivateMeBot', font_file='AppleGothic.ttf', color=(255,255,255)):
+def draw_signature(img,
+                   user='@MotivateMeBot',
+                   font_file='AppleGothic.ttf',
+                   color=(255,255,255),
+                   use_average_color=False):
     draw = ImageDraw.Draw(img)
     img_width, img_height = img.size
     boundary = int(img_height / 15)
@@ -199,10 +203,10 @@ def draw_signature(img, user='@MotivateMeBot', font_file='AppleGothic.ttf', colo
     region = region.filter( ImageFilter.GaussianBlur(radius=2*blur_boundary))
     img.paste(region, background_box)
 
-    color = average_color(img, background_box, inverse=True)
-    print(color)
-    color=(0,0,0)
-    color=(255,255,255)
+    if use_average_color:
+        color = average_color(img, background_box, inverse=True)
+        color = contrast_color(img, background_box)
+        print(color)
 
     draw.text((img_width - sig_width - sig_size, img_height - sig_height - sig_size),
                sig,
@@ -213,7 +217,8 @@ def draw_credits(img,
                  quote_tweeter,
                  image_tweeter,
                  font_file='AppleGothic.ttf',
-                 color=(255,255,255)):
+                 color=(255,255,255),
+                 use_average_color=False):
     draw = ImageDraw.Draw(img)
     img_width, img_height = img.size
     boundary = int(img_height / 15)
@@ -241,10 +246,10 @@ def draw_credits(img,
     region = region.filter( ImageFilter.GaussianBlur(radius=2*blur_boundary))
     img.paste(region, background_box)
 
-    color = average_color(img, background_box, inverse=True)
-    print(color)
-    color=(0,0,0)
-    color=(255,255,255)
+    if use_average_color:
+        color = average_color(img, background_box, inverse=True)
+        color = contrast_color(img, background_box)
+        print(color)
 
     draw.text((sig_size, img_height - image_cred_height - sig_size),
                 image_cred,

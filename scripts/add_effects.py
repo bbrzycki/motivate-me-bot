@@ -8,8 +8,11 @@ import cv2
 import motivate_me_bot as mmb
 
 if __name__ == '__main__':
-    img = mmb.get_image('../images/lanterns.jpg')
-    img_cv = cv2.imread('../images/lanterns.jpg')
+    # img = mmb.get_image('../images/flowers.jpg')
+    img = mmb.get_image('../images/elizabeth_lab.jpg')
+    # img = mmb.get_image('../images/chris.jpg')
+    # img = mmb.get_image('../images/lanterns.jpg')
+    # img_cv = cv2.imread('../images/lanterns.jpg')
 
     img_blur = img.filter( ImageFilter.GaussianBlur(radius=2) )
 
