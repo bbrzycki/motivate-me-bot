@@ -46,7 +46,7 @@ def get_all_luminances(img, background_box, range=64):
         sys.exit('Invalid range!')
     cropped_img = img.crop(background_box)
     luminances = []
-    for (r,g,b) in cropped_img.getdata():
+    for (r,g,b) in cropped_img.convert('RGB').getdata():
         perceived_luminance = (0.299 * r + 0.587 * g + 0.114 * b)
         luminances.append(perceived_luminance)
     light = 0

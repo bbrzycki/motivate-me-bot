@@ -10,7 +10,8 @@ import motivate_me_bot as mmb
 if __name__ == '__main__':
     # img = mmb.get_image('../images/flowers.jpg')
     # img = mmb.get_image('../images/elizabeth_lab.jpg')
-    img = mmb.get_image('../images/chris.jpg')
+    # img = mmb.get_image('../images/chris.jpg')
+    img = mmb.get_image('../images/github_page.jpg')
 
     location, color = mmb.select_region_and_color(img)
     box_corners = mmb.get_box_corners(img, location=location)
