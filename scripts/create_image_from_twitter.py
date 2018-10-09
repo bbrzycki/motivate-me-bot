@@ -11,7 +11,7 @@ if __name__ == '__main__':
     new_dir = 'new_images'
 
     quote_keyword = '#inspiration'
-    image_keyword = '#sunset'
+    image_keyword = '#stargazing'
 
     api = mmb.setup_api()
 
