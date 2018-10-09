@@ -88,9 +88,8 @@ def select_region_and_color(img, range=64):
     else: # minimum_shade == 'middle_dark'
         return 'middle', BLACK
 
-def check_image(filename):
+def check_image_colors(img):
     '''
     Filter out "bad" images.
     '''
-    img = get_image(filename)
     return True

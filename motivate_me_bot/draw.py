@@ -16,9 +16,9 @@ def draw_quote_in_box(img,
                       box_corners,
                       all_lines=['Hello, world!'],
                       font_file='Apple Chancery.ttf',
-                      font_size=12,
-                      color=None,,
-                      min_font_size=16
+                      font_size=14,
+                      color=None,
+                      min_font_size=14,
                       spacing=1,
                       equal_spacing=True,
                       max_char_height=None,
@@ -79,7 +79,7 @@ def draw_signature(img,
                    user='@MotivateMeBot',
                    font_file='AppleGothic.ttf',
                    color=None,
-                   min_font_size=16):
+                   min_font_size=14):
     draw = ImageDraw.Draw(img)
     img_width, img_height = img.size
     boundary = get_boundary(img)
@@ -114,7 +114,7 @@ def draw_credits(img,
                  image_screen_name,
                  font_file='AppleGothic.ttf',
                  color=None,
-                 min_font_size=16):
+                 min_font_size=14):
     draw = ImageDraw.Draw(img)
     img_width, img_height = img.size
     boundary = get_boundary(img)
