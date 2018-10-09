@@ -8,7 +8,7 @@ import numpy as np
 import sys
 import os
 
-from text_color import BLACK, WHITE
+from text_color import *
 
 from image_sizing import get_boundary, get_box_corners
 
@@ -74,7 +74,7 @@ def draw_quote_in_box(img,
 def draw_signature(img,
                    user='@MotivateMeBot',
                    font_file='AppleGothic.ttf',
-                   color=WHITE):
+                   color=None):
     draw = ImageDraw.Draw(img)
     img_width, img_height = img.size
     boundary = get_boundary(img)
@@ -94,16 +94,21 @@ def draw_signature(img,
     region = region.filter( ImageFilter.GaussianBlur(radius=2*blur_boundary))
     img.paste(region, background_box)
 
+    if color is None:
+        color = overall_contrast_color(img, background_box)
+
     draw.text((img_width - sig_width - sig_size, img_height - sig_height - sig_size),
                sig,
                color,
                font=sig_font)
 
 def draw_credits(img,
-                 quote_tweeter,
-                 image_tweeter,
+                 quote_name,
+                 quote_screen_name,
+                 image_name,
+                 image_screen_name,
                  font_file='AppleGothic.ttf',
-                 color=WHITE):
+                 color=None):
     draw = ImageDraw.Draw(img)
     img_width, img_height = img.size
     boundary = get_boundary(img)
@@ -112,13 +117,13 @@ def draw_credits(img,
     blur_boundary = int(boundary / 8)
 
     # Image Credit
-    image_cred = 'Image Credit: %s' % image_tweeter
+    image_cred = 'Image Credit: %s (@%s)' % (image_name, image_screen_name)
     image_cred_font_file = font_file
     image_cred_font = ImageFont.truetype(image_cred_font_file, cred_size)
     image_cred_width, image_cred_height = image_cred_font.getsize(image_cred)
 
     # Quote Credit
-    quote_cred = 'Quote Credit: %s' % quote_tweeter
+    quote_cred = 'Quote Credit: %s (@%s)' % (quote_name, quote_screen_name)
     quote_cred_font_file = font_file
     quote_cred_font = ImageFont.truetype(quote_cred_font_file, cred_size)
     quote_cred_width, quote_cred_height = quote_cred_font.getsize(quote_cred)
@@ -126,10 +131,12 @@ def draw_credits(img,
     background_box = (sig_size - blur_boundary, img_height - blur_boundary - image_cred_height - quote_cred_height - sig_size,
                          sig_size + blur_boundary + max(image_cred_width, quote_cred_width), img_height + blur_boundary - sig_size)
 
-
     region = img.crop(background_box)
     region = region.filter( ImageFilter.GaussianBlur(radius=2*blur_boundary))
     img.paste(region, background_box)
+
+    if color is None:
+        color = overall_contrast_color(img, background_box)
 
     draw.text((sig_size, img_height - image_cred_height - sig_size),
                 image_cred,
