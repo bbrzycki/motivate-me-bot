@@ -7,4 +7,5 @@ from text_color import *
 from text_formatting import *
 from draw import *
 from scrape_twitter import *
+from blur import *
 from screen_tweets import *

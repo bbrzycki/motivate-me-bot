@@ -12,6 +12,8 @@ from text_color import *
 
 from image_sizing import get_boundary, get_box_corners
 
+from blur import *
+
 def draw_quote_in_box(img,
                       box_corners,
                       all_lines=['Hello, world!'],
@@ -49,9 +51,7 @@ def draw_quote_in_box(img,
     if color is None:
         color = overall_contrast_color(img, background_box)
 
-    region = img.crop(background_box)
-    region = region.filter( ImageFilter.GaussianBlur(radius=blur_boundary / 2))
-    img.paste(region, background_box)
+    blur_box(img, background_box, blur_boundary / 2)
 
     # text = "Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text "
     for i, line in enumerate(all_lines):
@@ -98,9 +98,7 @@ def draw_signature(img,
     if color is None:
         color = overall_contrast_color(img, background_box)
 
-    region = img.crop(background_box)
-    region = region.filter( ImageFilter.GaussianBlur(radius=2*blur_boundary))
-    img.paste(region, background_box)
+    blur_box(img, background_box, 2 * blur_boundary)
 
     draw.text((img_width - sig_width - sig_size, img_height - sig_height - sig_size),
                sig,
@@ -140,9 +138,7 @@ def draw_credits(img,
     if color is None:
         color = overall_contrast_color(img, background_box)
 
-    region = img.crop(background_box)
-    region = region.filter( ImageFilter.GaussianBlur(radius=2*blur_boundary))
-    img.paste(region, background_box)
+    blur_box(img, background_box, 2 * blur_boundary)
 
     draw.text((sig_size, img_height - image_cred_height - sig_size),
                 image_cred,
