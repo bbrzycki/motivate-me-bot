@@ -42,7 +42,6 @@ if __name__ == '__main__':
 
     mmb.draw_signature(img)
 
-    # mmb.draw_credits(img, quote_tweeter='Mulia Khan', image_tweeter='NA', color=color)
     mmb.draw_credits(img,
                      quote_name,
                      quote_screen_name,
