@@ -11,7 +11,7 @@ if __name__ == '__main__':
     new_dir = 'new_images'
 
     quote_keyword = '#inspiration'
-    image_keyword = '#sunset'
+    image_keyword = '#stargazing'
 
     api = mmb.setup_api()
 
@@ -42,7 +42,6 @@ if __name__ == '__main__':
 
     mmb.draw_signature(img)
 
-    # mmb.draw_credits(img, quote_tweeter='Mulia Khan', image_tweeter='NA', color=color)
     mmb.draw_credits(img,
                      quote_name,
                      quote_screen_name,

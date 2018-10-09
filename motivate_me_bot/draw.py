@@ -16,8 +16,9 @@ def draw_quote_in_box(img,
                       box_corners,
                       all_lines=['Hello, world!'],
                       font_file='Apple Chancery.ttf',
-                      font_size=12,
-                      color=WHITE,
+                      font_size=14,
+                      color=None,
+                      min_font_size=14,
                       spacing=1,
                       equal_spacing=True,
                       max_char_height=None,
@@ -31,7 +32,7 @@ def draw_quote_in_box(img,
     box_width = x2 - x1
     box_height = y2 - y1
 
-    font = ImageFont.truetype(font_file, font_size)
+    font = ImageFont.truetype(font_file, max(font_size, min_font_size))
 
     if max_char_height is None:
         # Compute max_char_height
@@ -44,6 +45,9 @@ def draw_quote_in_box(img,
 
     background_box = (x1 - blur_boundary, y1 - blur_boundary,
                       x1 + blur_boundary + box_width, y1 + blur_boundary + box_height)
+
+    if color is None:
+        color = overall_contrast_color(img, background_box)
 
     region = img.crop(background_box)
     region = region.filter( ImageFilter.GaussianBlur(radius=blur_boundary / 2))
@@ -74,12 +78,13 @@ def draw_quote_in_box(img,
 def draw_signature(img,
                    user='@MotivateMeBot',
                    font_file='AppleGothic.ttf',
-                   color=None):
+                   color=None,
+                   min_font_size=14):
     draw = ImageDraw.Draw(img)
     img_width, img_height = img.size
     boundary = get_boundary(img)
-    sig_size = int(boundary / 2)
-    blur_boundary = int(boundary / 8)
+    sig_size = max(int(boundary / 2), min_font_size * 2)
+    blur_boundary = int(sig_size / 2)
 
     # MotivateMeBot sig
     sig = user
@@ -90,12 +95,12 @@ def draw_signature(img,
     background_box = (img_width - blur_boundary - sig_width - sig_size, img_height - blur_boundary - sig_height - sig_size,
                       img_width + blur_boundary - sig_size, img_height + blur_boundary - sig_size)
 
+    if color is None:
+        color = overall_contrast_color(img, background_box)
+
     region = img.crop(background_box)
     region = region.filter( ImageFilter.GaussianBlur(radius=2*blur_boundary))
     img.paste(region, background_box)
-
-    if color is None:
-        color = overall_contrast_color(img, background_box)
 
     draw.text((img_width - sig_width - sig_size, img_height - sig_height - sig_size),
                sig,
@@ -108,13 +113,14 @@ def draw_credits(img,
                  image_name,
                  image_screen_name,
                  font_file='AppleGothic.ttf',
-                 color=None):
+                 color=None,
+                 min_font_size=14):
     draw = ImageDraw.Draw(img)
     img_width, img_height = img.size
     boundary = get_boundary(img)
-    sig_size = int(boundary / 2)
-    cred_size = int(boundary / 4)
-    blur_boundary = int(boundary / 8)
+    sig_size = max(int(boundary / 2), min_font_size * 2)
+    cred_size = int(sig_size / 2)
+    blur_boundary = int(cred_size / 2)
 
     # Image Credit
     image_cred = 'Image Credit: %s (@%s)' % (image_name, image_screen_name)
@@ -131,12 +137,12 @@ def draw_credits(img,
     background_box = (sig_size - blur_boundary, img_height - blur_boundary - image_cred_height - quote_cred_height - sig_size,
                          sig_size + blur_boundary + max(image_cred_width, quote_cred_width), img_height + blur_boundary - sig_size)
 
+    if color is None:
+        color = overall_contrast_color(img, background_box)
+
     region = img.crop(background_box)
     region = region.filter( ImageFilter.GaussianBlur(radius=2*blur_boundary))
     img.paste(region, background_box)
-
-    if color is None:
-        color = overall_contrast_color(img, background_box)
 
     draw.text((sig_size, img_height - image_cred_height - sig_size),
                 image_cred,
