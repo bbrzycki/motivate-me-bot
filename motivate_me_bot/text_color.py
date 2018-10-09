@@ -60,8 +60,7 @@ def get_all_luminances(img, background_box, range=64):
 
 def overall_contrast_color(img, background_box, range=64):
     light, dark = get_all_luminances(img, background_box, range=range)
-    ratio = light / dark
-    if ratio >= 1 or dark == 0:
+    if dark == 0 or light / dark >= 1:
         return BLACK
     else:
         return WHITE
@@ -88,3 +87,10 @@ def select_region_and_color(img, range=64):
         return 'middle', WHITE
     else: # minimum_shade == 'middle_dark'
         return 'middle', BLACK
+
+def check_image(filename):
+    '''
+    Filter out "bad" images.
+    '''
+    img = get_image(filename)
+    return True

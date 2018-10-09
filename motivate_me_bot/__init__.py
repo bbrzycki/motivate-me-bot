@@ -6,3 +6,4 @@ from image_sizing import *
 from text_color import *
 from text_formatting import *
 from draw import *
+from scrape_twitter import *
