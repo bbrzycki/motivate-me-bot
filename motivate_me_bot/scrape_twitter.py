@@ -40,7 +40,7 @@ def find_quote(api, query, lang='en', count=100):
             return name, screen_name, filter_quote(full_text)
     return -1
 
-def find_image(api, query, output_dir='downloaded/', resolution='large', min_dimensions = (1200, 800), lang='en', count=100):
+def find_image(api, query, output_dir='downloaded/', resolution='large', min_dimensions = (1440, 1080), lang='en', count=100):
     try:
         os.makedirs(output_dir)
     except OSError as e:

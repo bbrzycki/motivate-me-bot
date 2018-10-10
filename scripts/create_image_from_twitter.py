@@ -16,7 +16,10 @@ if __name__ == '__main__':
     api = mmb.setup_api()
 
     quote_name, quote_screen_name, quote = mmb.find_quote(api, quote_keyword)
-    image_name, image_screen_name, image_filename = mmb.find_image(api, image_keyword, output_dir=download_dir)
+    image_name, image_screen_name, image_filename = mmb.find_image(api,
+                                                                   image_keyword,
+                                                                   output_dir=download_dir,
+                                                                   min_dimensions = (1440, 1080))
 
     img = mmb.get_image(image_filename)
 
