@@ -5,6 +5,7 @@ import os
 import sys
 import errno
 from pprint import pprint
+import shutil
 import requests
 from requests_oauthlib import OAuth1
 
@@ -30,21 +31,16 @@ def find_quote(api, query, lang='en', count=100):
         tweet_dict = vars(tweet)['_json']
         full_text = tweet_dict['full_text']
         if screen_quote(full_text):
-            # Check whether tweet is a retweet
-            if full_text[0:2] != 'RT':
-                name = tweet_dict['user']['name']
-                screen_name = tweet_dict['user']['screen_name']
-            elif 'retweeted_status' in tweet_dict.keys():
-                retweet_dict = tweet_dict['retweeted_status']
-                name = retweet_dict['user']['name']
-                screen_name = retweet_dict['user']['screen_name']
-                full_text = retweet_dict['full_text']
-            else:
-                continue
+            # Check whether tweet is retweet -- if so, point to retweet instead
+            if 'retweeted_status' in tweet_dict.keys():
+                tweet_dict = tweet_dict['retweeted_status']
+            name = tweet_dict['user']['name']
+            screen_name = tweet_dict['user']['screen_name']
+            full_text = tweet_dict['full_text']
             return name, screen_name, filter_quote(full_text)
     return -1
 
-def find_image(api, query, output_dir='downloaded/', lang='en', count=100):
+def find_image(api, query, output_dir='downloaded/', resolution='large', min_dimensions = (1200, 800), lang='en', count=100):
     try:
         os.makedirs(output_dir)
     except OSError as e:
@@ -56,17 +52,28 @@ def find_image(api, query, output_dir='downloaded/', lang='en', count=100):
         full_text = tweet_dict['full_text']
         if screen_quote(full_text):
             # Check whether tweet is retweet -- if so, point to retweet instead
-            if full_text[0:2] == 'RT':
+            if 'retweeted_status' in tweet_dict.keys():
                 tweet_dict = tweet_dict['retweeted_status']
             # Check if the tweet contains media
             if 'extended_entities' in tweet_dict.keys():
-                if tweet_dict['extended_entities']['media'][0]['type'] == 'photo':
-                    print(tweet_dict['extended_entities']['media'][0])
+                media_dict = tweet_dict['extended_entities']['media'][0]
+                dimensions = media_dict['sizes'][resolution]
+                w, h = dimensions['w'], dimensions['h']
+                min_w, min_h = min_dimensions
+                if media_dict['type'] == 'photo' and w >= min_w and h >= min_h:
                     name = tweet_dict['user']['name']
                     screen_name = tweet_dict['user']['screen_name']
-                    url = tweet_dict['extended_entities']['media'][0]['media_url_https']
-                    filename = wget.download(url, out=output_dir)
-                    # TODO: Filter out "bad" images
+                    url = media_dict['media_url_https'] + ':' + resolution
+
+                    filename = output_dir + url.split('/')[-1][:-(1 + len(resolution))]
+
+                    # Avoid reading potentially large images all at once
+                    response = requests.get(url, stream=True)
+                    with open(filename, 'wb') as outfile:
+                        shutil.copyfileobj(response.raw, outfile)
+                    del response
+
+                    # Filter out "bad" images
                     if screen_image(filename):
                         return name, screen_name, filename
     return -1

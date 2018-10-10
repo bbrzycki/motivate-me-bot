@@ -7,11 +7,11 @@ import numpy as np
 import motivate_me_bot as mmb
 
 if __name__ == '__main__':
-    download_dir = 'images'
-    new_dir = 'new_images'
+    download_dir = 'images/'
+    new_dir = 'new_images/'
 
-    quote_keyword = '#inspiration'
-    image_keyword = '#stargazing'
+    quote_keyword = '#motivation'
+    image_keyword = '#sunset'
 
     api = mmb.setup_api()
 
