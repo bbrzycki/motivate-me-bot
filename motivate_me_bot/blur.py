@@ -16,3 +16,6 @@ def blur_box(img, background_box, blur_radius):
     region = img.crop(background_box)
     region = region.filter(ImageFilter.GaussianBlur(radius=blur_radius))
     img.paste(region, background_box)
+    
+def gradient_blur_box(img, background_box, max_blur_radius):
+    pass
