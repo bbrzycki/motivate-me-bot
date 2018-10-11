@@ -58,6 +58,7 @@ def find_image(api, query, output_dir='downloaded/', resolution='large', min_dim
 
                     # Check whether the image is good (for color / tweet content)
                     img = get_image(filename)
+                    print('Image:', full_text)
                     if screen_image_tweet(img, name, screen_name, full_text):
                         return name, screen_name, filename
     return -1

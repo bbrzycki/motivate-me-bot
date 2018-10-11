@@ -17,7 +17,6 @@ def check_hashtag(text):
 
 def check_appropriate(name, screen_name, full_text):
     exclude_words = []
-    print(os.path.dirname(__file__))
     with open(os.path.join(os.path.dirname(__file__), 'bad-words.txt'), 'r') as f:
         bad_words = f.read()
         exclude_words.extend(bad_words.split('\n'))

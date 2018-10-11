@@ -4,7 +4,7 @@ import sys
 import os
 from autocorrect import spell
 
-def filter_quote(full_text):
+def filter_quote(full_text, autocorrect=False):
     # TODO: If a new line does *not* have punctuation, then add it..
     # Otherwise don't add anything
     word_list = full_text.replace('\n', ' ').split(' ')
@@ -27,10 +27,11 @@ def filter_quote(full_text):
     for i, word in enumerate(word_list):
         if check_hashtag(word):
             word_list[i] = word[1:]
-        try:
-            word_list[i] = spell(word_list[i])
-        except AttributeError:
-            pass
+        if autocorrect:
+            try:
+                word_list[i] = spell(word_list[i])
+            except AttributeError:
+                pass
 
     print(word_list)
     filtered = ' '.join(word_list)
