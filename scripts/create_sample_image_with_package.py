@@ -8,10 +8,10 @@ import numpy as np
 import motivate_me_bot as mmb
 
 if __name__ == '__main__':
-    # img = mmb.get_image('../images/flowers.jpg')
+    img = mmb.get_image('../images/flowers.jpg')
     # img = mmb.get_image('../images/elizabeth_lab.jpg')
     # img = mmb.get_image('../images/chris.jpg')
-    img = mmb.get_image('../images/github_page.jpg')
+    # img = mmb.get_image('../images/github_page.jpg')
 
     location, color = mmb.select_region_and_color(img)
     box_corners = mmb.get_box_corners(img, location=location)
@@ -41,8 +41,10 @@ if __name__ == '__main__':
 
     # mmb.draw_credits(img, quote_tweeter='Mulia Khan', image_tweeter='NA', color=color)
     mmb.draw_credits(img,
-                     quote_tweeter='@maggieisntcool',
-                     image_tweeter='@ElizabethLi',
+                    quote_name='???',
+                    quote_screen_name='@maggieisntcool',
+                    image_name='Elizabeth Li',
+                    image_screen_name='@ElizabethLi',
                      color=color)
 
     img.show()
