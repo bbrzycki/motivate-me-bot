@@ -13,6 +13,7 @@ from text_color import *
 from screen_tweets import *
 from image_sizing import *
 from text_sizing import *
+from text_filtering import *
 
 def setup_api():
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -57,6 +58,7 @@ def find_image(api, query, output_dir='downloaded/', resolution='large', min_dim
 
                     # Check whether the image is good (for color / tweet content)
                     img = get_image(filename)
+                    print('Image:', full_text)
                     if screen_image_tweet(img, name, screen_name, full_text):
                         return name, screen_name, filename
     return -1
@@ -73,7 +75,9 @@ def find_quote(api, img, query, lang='en', count=100):
             screen_name = tweet_dict['user']['screen_name']
             full_text = tweet_dict['full_text']
             if screen_quote_tweet(img, name, screen_name, full_text):
-                return name, screen_name, filter_quote(full_text)
+                filtered_text = filter_quote(full_text)
+                if check_quote_quality(filtered_text):
+                    return name, screen_name, filtered_text
     return -1
 
 if __name__ == '__main__':

@@ -3,7 +3,43 @@ from text_sizing import *
 from text_formatting import *
 from text_color import *
 
+import sys
+import os
+
+import string
+import regex
+
+def check_website(text):
+    return 'http' in text and '://' in text
+
+def check_hashtag(text):
+    return text[0] == '#'
+
 def check_appropriate(name, screen_name, full_text):
+    exclude_words = []
+    with open(os.path.join(os.path.dirname(__file__), 'bad-words.txt'), 'r') as f:
+        bad_words = f.read()
+        exclude_words.extend(bad_words.split('\n'))
+    with open(os.path.join(os.path.dirname(__file__), 'spam-twitter-words.txt'), 'r') as f:
+        spam_words = f.read()
+        exclude_words.extend(spam_words.split('\n'))
+
+    all_text = "%s %s %s" % (name, screen_name, full_text)
+
+    remove = regex.compile(r'[\p{C}|\p{M}|\p{P}|\p{S}|\p{Z}]+', regex.UNICODE)
+    all_text = remove.sub(' ', all_text).strip()
+
+    word_list = all_text.replace('\n', ' ').split(' ')
+    for word in exclude_words:
+        if word.lower() in [w.lower() for w in word_list]:
+            return False
+
+    return True
+
+def check_quote_quality(full_text):
+
+    if len(full_text.split(' ')) < 8:
+        return False
     return True
 
 def screen_image_tweet(img, name, screen_name, full_text):
@@ -14,6 +50,3 @@ def screen_image_tweet(img, name, screen_name, full_text):
 def screen_quote_tweet(img, name, screen_name, full_text):
     return check_text_widths(img, name, screen_name, full_text) \
         and check_appropriate(name, screen_name, full_text)
-
-def filter_quote(full_text):
-    return full_text
