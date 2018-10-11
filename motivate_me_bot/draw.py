@@ -53,7 +53,6 @@ def draw_quote_in_box(img,
 
     blur_box(img, background_box, blur_boundary / 2)
 
-    # text = "Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text "
     for i, line in enumerate(all_lines):
         line_width, line_height = font.getsize(line)
         x_coord = x1 + box_width / 2 - line_width / 2
@@ -88,8 +87,7 @@ def draw_signature(img,
 
     # MotivateMeBot sig
     sig = user
-    sig_font_file = font_file
-    sig_font = ImageFont.truetype(sig_font_file, sig_size)
+    sig_font = ImageFont.truetype(font_file, sig_size)
     sig_width, sig_height = sig_font.getsize(sig)
 
     background_box = (img_width - blur_boundary - sig_width - sig_size, img_height - blur_boundary - sig_height - sig_size,
@@ -120,17 +118,15 @@ def draw_credits(img,
     cred_size = int(sig_size / 2)
     blur_boundary = int(cred_size / 2)
 
+    cred_font = ImageFont.truetype(font_file, cred_size)
+
     # Image Credit
     image_cred = 'Image Credit: %s (@%s)' % (image_name, image_screen_name)
-    image_cred_font_file = font_file
-    image_cred_font = ImageFont.truetype(image_cred_font_file, cred_size)
-    image_cred_width, image_cred_height = image_cred_font.getsize(image_cred)
+    image_cred_width, image_cred_height = cred_font.getsize(image_cred)
 
     # Quote Credit
     quote_cred = 'Quote Credit: %s (@%s)' % (quote_name, quote_screen_name)
-    quote_cred_font_file = font_file
-    quote_cred_font = ImageFont.truetype(quote_cred_font_file, cred_size)
-    quote_cred_width, quote_cred_height = quote_cred_font.getsize(quote_cred)
+    quote_cred_width, quote_cred_height = cred_font.getsize(quote_cred)
 
     background_box = (sig_size - blur_boundary, img_height - blur_boundary - image_cred_height - quote_cred_height - sig_size,
                          sig_size + blur_boundary + max(image_cred_width, quote_cred_width), img_height + blur_boundary - sig_size)
@@ -143,9 +139,9 @@ def draw_credits(img,
     draw.text((sig_size, img_height - image_cred_height - sig_size),
                 image_cred,
                 color,
-                font=image_cred_font)
+                font=cred_font)
 
     draw.text((sig_size, img_height - image_cred_height * 1.2 - quote_cred_height - sig_size),
                quote_cred,
                color,
-               font=quote_cred_font)
+               font=cred_font)

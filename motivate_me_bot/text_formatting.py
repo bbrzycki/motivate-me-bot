@@ -40,7 +40,6 @@ def fit_text_to_box(box_corners,
             proposed_text_width, proposed_text_height = font.getsize(' '.join(proposed_line))                # Check line width fits within box width
             if proposed_text_height > proposed_max_char_height:
                 proposed_max_char_height = proposed_text_height
-
             if proposed_text_width <= box_width:
                 current_line = proposed_line
             else:

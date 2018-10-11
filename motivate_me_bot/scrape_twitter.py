@@ -3,7 +3,6 @@ import json
 import wget
 import os
 import sys
-import errno
 from pprint import pprint
 import shutil
 import requests
@@ -12,6 +11,8 @@ from requests_oauthlib import OAuth1
 from keys import *
 from text_color import *
 from screen_tweets import *
+from image_sizing import *
+from text_sizing import *
 
 def setup_api():
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -25,35 +26,15 @@ def search_keyword(api, query, lang='en', count=100):
     results = api.search(q=query, lang=lang, count=count, tweet_mode='extended')
     return results
 
-def find_quote(api, query, lang='en', count=100):
-    results = search_keyword(api, query)
-    for tweet in results:
-        tweet_dict = vars(tweet)['_json']
-        full_text = tweet_dict['full_text']
-        if screen_quote(full_text):
-            # Check whether tweet is retweet -- if so, point to retweet instead
-            if 'retweeted_status' in tweet_dict.keys():
-                tweet_dict = tweet_dict['retweeted_status']
-            name = tweet_dict['user']['name']
-            screen_name = tweet_dict['user']['screen_name']
-            full_text = tweet_dict['full_text']
-            return name, screen_name, filter_quote(full_text)
-    return -1
-
 def find_image(api, query, output_dir='downloaded/', resolution='large', min_dimensions = (1440, 1080), lang='en', count=100):
-    try:
-        os.makedirs(output_dir)
-    except OSError as e:
-        if e.errno != errno.EEXIST:
-            raise
-    results = search_keyword(api, query)
-    for tweet in results:
-        tweet_dict = vars(tweet)['_json']
-        full_text = tweet_dict['full_text']
-        if screen_quote(full_text):
+    while True:
+        results = search_keyword(api, query)
+        for tweet in results:
+            tweet_dict = vars(tweet)['_json']
             # Check whether tweet is retweet -- if so, point to retweet instead
             if 'retweeted_status' in tweet_dict.keys():
                 tweet_dict = tweet_dict['retweeted_status']
+
             # Check if the tweet contains media
             if 'extended_entities' in tweet_dict.keys():
                 media_dict = tweet_dict['extended_entities']['media'][0]
@@ -63,6 +44,7 @@ def find_image(api, query, output_dir='downloaded/', resolution='large', min_dim
                 if media_dict['type'] == 'photo' and w >= min_w and h >= min_h:
                     name = tweet_dict['user']['name']
                     screen_name = tweet_dict['user']['screen_name']
+                    full_text = tweet_dict['full_text']
                     url = media_dict['media_url_https'] + ':' + resolution
 
                     filename = output_dir + url.split('/')[-1][:-(1 + len(resolution))]
@@ -73,9 +55,25 @@ def find_image(api, query, output_dir='downloaded/', resolution='large', min_dim
                         shutil.copyfileobj(response.raw, outfile)
                     del response
 
-                    # Filter out "bad" images
-                    if screen_image(filename):
+                    # Check whether the image is good (for color / tweet content)
+                    img = get_image(filename)
+                    if screen_image_tweet(img, name, screen_name, full_text):
                         return name, screen_name, filename
+    return -1
+
+def find_quote(api, img, query, lang='en', count=100):
+    while True:
+        results = search_keyword(api, query)
+        for tweet in results:
+            tweet_dict = vars(tweet)['_json']
+            # Check whether tweet is retweet -- if so, point to retweet instead
+            if 'retweeted_status' in tweet_dict.keys():
+                tweet_dict = tweet_dict['retweeted_status']
+            name = tweet_dict['user']['name']
+            screen_name = tweet_dict['user']['screen_name']
+            full_text = tweet_dict['full_text']
+            if screen_quote_tweet(img, name, screen_name, full_text):
+                return name, screen_name, filter_quote(full_text)
     return -1
 
 if __name__ == '__main__':
