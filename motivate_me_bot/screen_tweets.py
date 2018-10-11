@@ -14,6 +14,3 @@ def screen_image_tweet(img, name, screen_name, full_text):
 def screen_quote_tweet(img, name, screen_name, full_text):
     return check_text_widths(img, name, screen_name, full_text) \
         and check_appropriate(name, screen_name, full_text)
-
-def filter_quote(full_text):
-    return full_text

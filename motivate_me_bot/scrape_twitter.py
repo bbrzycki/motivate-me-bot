@@ -13,6 +13,7 @@ from text_color import *
 from screen_tweets import *
 from image_sizing import *
 from text_sizing import *
+from text_filtering import *
 
 def setup_api():
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
