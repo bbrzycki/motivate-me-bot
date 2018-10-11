@@ -74,7 +74,9 @@ def find_quote(api, img, query, lang='en', count=100):
             screen_name = tweet_dict['user']['screen_name']
             full_text = tweet_dict['full_text']
             if screen_quote_tweet(img, name, screen_name, full_text):
-                return name, screen_name, filter_quote(full_text)
+                filtered_text = filter_quote(full_text)
+                if check_quote_quality(filtered_text):
+                    return name, screen_name, filtered_text
     return -1
 
 if __name__ == '__main__':
