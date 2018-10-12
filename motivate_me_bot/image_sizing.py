@@ -11,9 +11,9 @@ import os
 def get_image(image_path):
     return Image.open(image_path)
 
-def get_boundary(img):
+def get_boundary(img, scaling=16):
     img_width, img_height = img.size
-    return min(int(img_width / 15), int(img_height / 15))
+    return min(int(img_width / scaling), int(img_height / scaling))
 
 def get_box_corners(img, location='top'):
     img_width, img_height = img.size
