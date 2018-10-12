@@ -31,7 +31,7 @@ def constant_blur(img, background_box, blur_radius):
     region = region.filter(ImageFilter.GaussianBlur(radius=blur_radius))
     img.paste(region, background_box)
 
-def blur_box(img, background_box, max_blur_radius, n=0):
+def gradient_blur(img, background_box, max_blur_radius, n=0):
     '''
     Blur section of img object according to the background box of locations and
     blur radius

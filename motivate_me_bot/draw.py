@@ -51,8 +51,7 @@ def draw_quote_in_box(img,
     if color is None:
         color = overall_contrast_color(img, background_box)
 
-    print(int(box_height/16))
-    blur_box(img, background_box, 2 * blur_boundary, n=int(box_height/16))
+    gradient_blur(img, background_box, 2 * blur_boundary, n=int(box_height/16))
 
     for i, line in enumerate(all_lines):
         line_width, line_height = font.getsize(line)
@@ -91,7 +90,7 @@ def draw_signature(img,
     if color is None:
         color = overall_contrast_color(img, background_box)
 
-    blur_box(img, background_box, blur_boundary, n=int(sig_height/4))
+    gradient_blur(img, background_box, blur_boundary, n=int(sig_height/4))
 
     draw.text((img_width - sig_width - sig_size, img_height - sig_height - sig_size),
                sig,
@@ -129,7 +128,7 @@ def draw_credits(img,
     if color is None:
         color = overall_contrast_color(img, background_box)
 
-    blur_box(img, background_box, blur_boundary, n=int((image_cred_height+quote_cred_height)/4))
+    gradient_blur(img, background_box, blur_boundary, n=int((image_cred_height+quote_cred_height)/4))
 
     draw.text((sig_size, img_height - image_cred_height - sig_size),
                 image_cred,

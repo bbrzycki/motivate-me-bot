@@ -41,7 +41,7 @@ if __name__ == '__main__':
     background_box = (x1 - blur_boundary, y1 - blur_boundary,
                       x1 + blur_boundary + box_width, y1 + blur_boundary + box_height)
 
-    mmb.blur_box(img, background_box, blur_boundary, n=int(box_height/16))
+    mmb.gradient_blur(img, background_box, blur_boundary, n=int(box_height/16))
 
     for i, line in enumerate(all_lines):
         line_width, line_height = font.getsize(line)
