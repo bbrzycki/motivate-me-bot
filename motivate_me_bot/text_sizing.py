@@ -71,7 +71,16 @@ def check_quote_width(img, name, screen_name, full_text, min_font_size=14):
     box_corners = get_box_corners(img, location=location)
     font_file = 'Apple Chancery.ttf'
 
-    font_size = fit_text_to_box(box_corners, full_text, font_file, equal_spacing=True)[1]
+    all_lines, font_size, spacing, max_char_height = fit_text_to_box(box_corners, full_text, font_file, equal_spacing=True)
+    # Check that there are more than one word per line
+    # for line in all_lines:
+    #     count = 0
+    #     for block in line.split(' '):
+    #         if len(block) >= 2:
+    #             count += 1
+    #     if count <= 1:
+    #         return False
+    # Check that font_size is at least the minimum font size
     return font_size >= min_font_size
 
 def check_footer_width(img, name, screen_name):
