@@ -11,6 +11,7 @@ import os
 from image_sizing import *
 
 def draw_box(img, box, line_width=1):
+    '''Draw a rectangular box on the image'''
     x1, y1, x2, y2 = box
     box_width = x2 - x1
     box_height = y2 - y1
@@ -27,14 +28,15 @@ def draw_box(img, box, line_width=1):
     draw.line((x1 + box_width, y1 + box_height + line_width / 2 - 1, x1 + box_width, y1 - line_width / 2 + 1), width=line_width)
 
 def constant_blur(img, background_box, blur_radius):
+    '''Blur a region of the image with a constant blurring radius'''
     region = img.crop(background_box)
     region = region.filter(ImageFilter.GaussianBlur(radius=blur_radius))
     img.paste(region, background_box)
 
 def gradient_blur(img, background_box, max_blur_radius, n=0):
     '''
-    Blur section of img object according to the background box of locations and
-    blur radius
+    Blur a region of the image with a gradient blurring radius, reaching
+    a constant blurring radius at the center half of the region
     '''
     if n == 0:
         constant_blur(img, background_box, max_blur_radius)

@@ -46,21 +46,23 @@ def find_image(api, query, output_dir='downloaded/', resolution='large', min_dim
                     name = tweet_dict['user']['name']
                     screen_name = tweet_dict['user']['screen_name']
                     full_text = tweet_dict['full_text']
-                    url = media_dict['media_url_https'] + ':' + resolution
 
-                    filename = output_dir + url.split('/')[-1][:-(1 + len(resolution))]
+                    if check_appropriate(name, screen_name, full_text):
+                        url = media_dict['media_url_https'] + ':' + resolution
 
-                    # Avoid reading potentially large images all at once
-                    response = requests.get(url, stream=True)
-                    with open(filename, 'wb') as outfile:
-                        shutil.copyfileobj(response.raw, outfile)
-                    del response
+                        filename = output_dir + url.split('/')[-1][:-(1 + len(resolution))]
 
-                    # Check whether the image is good (for color / tweet content)
-                    img = get_image(filename)
-                    print('Image:', full_text)
-                    if screen_image_tweet(img, name, screen_name, full_text):
-                        return name, screen_name, filename
+                        # Avoid reading potentially large images all at once
+                        response = requests.get(url, stream=True)
+                        with open(filename, 'wb') as outfile:
+                            shutil.copyfileobj(response.raw, outfile)
+                        del response
+
+                        # Check whether the image is good (for color / tweet content)
+                        img = get_image(filename)
+                        print('Image:', full_text)
+                        if screen_image_tweet(img, name, screen_name, full_text):
+                            return name, screen_name, filename
     return -1
 
 def find_quote(api, img, query, lang='en', count=100):
@@ -74,9 +76,9 @@ def find_quote(api, img, query, lang='en', count=100):
             name = tweet_dict['user']['name']
             screen_name = tweet_dict['user']['screen_name']
             full_text = tweet_dict['full_text']
-            if screen_quote_tweet(img, name, screen_name, full_text):
+            if check_appropriate(name, screen_name, full_text):
                 filtered_text = filter_quote(full_text)
-                if check_quote_quality(filtered_text):
+                if screen_quote_tweet(img, name, screen_name, filtered_text):
                     return name, screen_name, filtered_text
     return -1
 

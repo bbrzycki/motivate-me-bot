@@ -16,6 +16,10 @@ def check_hashtag(text):
     return text[0] == '#'
 
 def check_appropriate(name, screen_name, full_text):
+    '''
+    Check whether the tweet uses inappropriate language (or keywords that are
+    otherwise good to exclude, such as promotional material)
+    '''
     exclude_words = []
     with open(os.path.join(os.path.dirname(__file__), 'bad-words.txt'), 'r') as f:
         bad_words = f.read()
@@ -27,9 +31,9 @@ def check_appropriate(name, screen_name, full_text):
     all_text = "%s %s %s" % (name, screen_name, full_text)
 
     remove = regex.compile(r'[\p{C}|\p{M}|\p{P}|\p{S}|\p{Z}]+', regex.UNICODE)
-    all_text = remove.sub(' ', all_text).strip()
+    all_text = remove.sub(' ', all_text)
 
-    word_list = all_text.replace('\n', ' ').split(' ')
+    word_list = all_text.replace('\n', ' ').split()
     for word in exclude_words:
         if word.lower() in [w.lower() for w in word_list]:
             return False
@@ -37,16 +41,17 @@ def check_appropriate(name, screen_name, full_text):
     return True
 
 def check_quote_quality(full_text):
-
-    if len(full_text.split(' ')) < 8:
+    '''Somehow determine the "quality" of the resulting quote'''
+    if len(full_text.split()) < 8:
         return False
     return True
 
 def screen_image_tweet(img, name, screen_name, full_text):
+    '''Check whether the image is good enough to use'''
     return check_image_colors(img) \
-        and check_footer_width(img, name, screen_name) \
-        and check_appropriate(name, screen_name, full_text)
+        and check_footer_width(img, name, screen_name)
 
 def screen_quote_tweet(img, name, screen_name, full_text):
+    '''Check whether the quote is good enough to use'''
     return check_text_widths(img, name, screen_name, full_text) \
-        and check_appropriate(name, screen_name, full_text)
+        and check_quote_quality(full_text)
