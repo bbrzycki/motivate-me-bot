@@ -45,8 +45,8 @@ def find_image(api, query, output_dir='downloaded/', resolution='large', min_dim
                 if media_dict['type'] == 'photo' and w >= min_w and h >= min_h:
                     name = tweet_dict['user']['name']
                     screen_name = tweet_dict['user']['screen_name']
+                    tweet_id_str = tweet_dict['id_str']
                     full_text = tweet_dict['full_text']
-
                     if check_appropriate(name, screen_name, full_text):
                         url = media_dict['media_url_https'] + ':' + resolution
 
@@ -62,7 +62,7 @@ def find_image(api, query, output_dir='downloaded/', resolution='large', min_dim
                         img = get_image(filename)
                         print('Image:', full_text)
                         if screen_image_tweet(img, name, screen_name, full_text):
-                            return name, screen_name, filename
+                            return name, screen_name, tweet_id_str, filename
     return -1
 
 def find_quote(api, img, query, lang='en', count=100):
@@ -75,11 +75,12 @@ def find_quote(api, img, query, lang='en', count=100):
                 tweet_dict = tweet_dict['retweeted_status']
             name = tweet_dict['user']['name']
             screen_name = tweet_dict['user']['screen_name']
+            tweet_id_str = tweet_dict['id_str']
             full_text = tweet_dict['full_text']
             if check_appropriate(name, screen_name, full_text):
                 filtered_text = filter_quote(full_text)
                 if screen_quote_tweet(img, name, screen_name, filtered_text):
-                    return name, screen_name, filtered_text
+                    return name, screen_name, tweet_id_str, filtered_text
     return -1
 
 if __name__ == '__main__':

@@ -14,11 +14,16 @@ if __name__ == '__main__':
     quote_keyword = '#motivation'
     image_keyword = '#sunset'
 
-    quote_screen_name, image_screen_name, new_image_filename = mmb.create_combined_image(image_keyword,
+    image_screen_name, image_tweet_id_str, quote_screen_name, \
+        quote_tweet_id_str, new_image_filename = mmb.create_combined_image(image_keyword,
                                                                                          quote_keyword,
                                                                                          download_dir,
                                                                                          new_dir,
                                                                                          show=False)
 
     print(new_image_filename)
-    # mmb.upload_image(quote_screen_name, image_screen_name, new_image_filename)
+    mmb.upload_image(image_screen_name,
+                     image_tweet_id_str,
+                     quote_screen_name,
+                     quote_tweet_id_str,
+                     new_image_filename)
