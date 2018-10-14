@@ -39,7 +39,7 @@ def create_combined_image(image_keyword='#sunset',
     api = setup_api()
 
     print('Finding image...')
-    image_name, image_screen_name, image_filename = find_image(api,
+    image_name, image_screen_name, image_tweet_id_str, image_filename = find_image(api,
                                                                image_keyword,
                                                                output_dir=download_dir,
                                                                min_dimensions = (1440, 1080))
@@ -53,7 +53,7 @@ def create_combined_image(image_keyword='#sunset',
     box_corners = get_box_corners(img, location=location)
 
     print('Finding quote...')
-    quote_name, quote_screen_name, quote = find_quote(api, img, quote_keyword)
+    quote_name, quote_screen_name, quote_tweet_id_str, quote = find_quote(api, img, quote_keyword)
 
     print('Fitting quote to image...')
     all_lines, font_size, spacing, max_char_height = fit_text_to_box(box_corners,
@@ -91,8 +91,16 @@ def create_combined_image(image_keyword='#sunset',
     if show:
         img.show()
 
-    return quote_screen_name, image_screen_name, new_image_filename
+    return image_screen_name, image_tweet_id_str, \
+        quote_screen_name, quote_tweet_id_str, new_image_filename
 
-def upload_image(quote_screen_name, image_screen_name, new_image_filename):
+def upload_image(image_screen_name,
+                 image_tweet_id_str,
+                 quote_screen_name,
+                 quote_tweet_id_str,
+                 new_image_filename):
     api = setup_api()
-    api.update_with_media(new_image_filename, status="First light!")
+    tweet_text = 'Image: @%s (https://twitter.com/%s/status/%s) | ' % (image_screen_name, image_screen_name, image_tweet_id_str) \
+               + 'Quote: @%s (https://twitter.com/%s/status/%s)' % (quote_screen_name, quote_screen_name, quote_tweet_id_str)
+    print('Status:', tweet_text)
+    api.update_with_media(new_image_filename, status=tweet_text)
