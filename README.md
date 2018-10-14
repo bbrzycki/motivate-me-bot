@@ -1,2 +1,4 @@
 # motivate-me-bot [![Build Status](https://travis-ci.org/bbrzycki/motivate-me-bot.svg?branch=master)](https://travis-ci.org/bbrzycki/motivate-me-bot)
-@MotivateMeBot is a Twitter bot that tries to make motivational pictures.
+@MotivateMeBot is a Twitter bot that tries to make motivational pictures by combining content from other tweets!
+
+Example scripts located in `scripts/`! Specifically, `create_image_from_twitter.py` runs the tweet scraping / image & text editing pipeline.
