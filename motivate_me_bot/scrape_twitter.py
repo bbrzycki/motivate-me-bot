@@ -1,6 +1,5 @@
 import tweepy
 import json
-import wget
 import os
 import sys
 from pprint import pprint
