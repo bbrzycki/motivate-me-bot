@@ -1,2 +1,7 @@
 numpy
 Pillow
+requests
+tweepy
+pprint
+autocorrect
+regex
