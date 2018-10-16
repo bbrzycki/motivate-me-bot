@@ -17,8 +17,8 @@ try:
     from os import environ
     CONSUMER_KEY = environ['CONSUMER_KEY']
     CONSUMER_SECRET = environ['CONSUMER_SECRET']
-    ACCESS_TOKEN = environ['ACCESS_KEY']
-    ACCESS_TOKEN_SECRET = environ['ACCESS_SECRET']
+    ACCESS_TOKEN = environ['ACCESS_TOKEN']
+    ACCESS_TOKEN_SECRET = environ['ACCESS_TOKEN_SECRET']
 except ModuleNotFoundError:
     from keys import *
 
