@@ -18,7 +18,8 @@ def create_combined_image(image_keyword='#sunset',
                           quote_keyword='#motivation',
                           download_dir='images/',
                           new_dir='new_images/',
-                          font_file='Apple Chancery.ttf',
+                          quote_font_file='Apple Chancery.ttf',
+                          footer_font_file='AppleGothic.ttf',
                           show=False):
     if download_dir[-1] != '/':
         download_dir = download_dir + '/'
@@ -58,7 +59,7 @@ def create_combined_image(image_keyword='#sunset',
     print('Fitting quote to image...')
     all_lines, font_size, spacing, max_char_height = fit_text_to_box(box_corners,
                                                                      quote,
-                                                                     font_file,
+                                                                     quote_font_file,
                                                                      equal_spacing=True)
 
     print('Writing quote to image...')
@@ -66,7 +67,7 @@ def create_combined_image(image_keyword='#sunset',
     draw_quote_in_box(img,
                       box_corners,
                       all_lines,
-                      font_file,
+                      quote_font_file,
                       font_size,
                       color=color,
                       spacing=spacing,
@@ -75,14 +76,15 @@ def create_combined_image(image_keyword='#sunset',
                       draw_box=False)
 
     print('Writing signature to image...')
-    draw_signature(img)
+    draw_signature(img, font_file=footer_font_file)
 
     print('Writing credits to image...')
     draw_credits(img,
                  quote_name,
                  quote_screen_name,
                  image_name,
-                 image_screen_name)
+                 image_screen_name,
+                 font_file=footer_font_file)
 
     print('Finished!')
     new_image_filename = new_dir + os.path.split(image_filename)[1]

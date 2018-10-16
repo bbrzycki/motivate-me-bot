@@ -19,7 +19,7 @@ try:
     CONSUMER_SECRET = environ['CONSUMER_SECRET']
     ACCESS_TOKEN = environ['ACCESS_TOKEN']
     ACCESS_TOKEN_SECRET = environ['ACCESS_TOKEN_SECRET']
-except ModuleNotFoundError:
+except KeyError:
     from keys import *
 
 def setup_api():
