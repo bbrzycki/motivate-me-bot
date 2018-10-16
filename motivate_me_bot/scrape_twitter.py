@@ -7,16 +7,24 @@ import shutil
 import requests
 from requests_oauthlib import OAuth1
 
-from keys import *
 from text_color import *
 from screen_tweets import *
 from image_sizing import *
 from text_sizing import *
 from text_filtering import *
 
+try:
+    from os import environ
+    CONSUMER_KEY = environ['CONSUMER_KEY']
+    CONSUMER_SECRET = environ['CONSUMER_SECRET']
+    ACCESS_TOKEN = environ['ACCESS_KEY']
+    ACCESS_TOKEN_SECRET = environ['ACCESS_SECRET']
+except ModuleNotFoundError:
+    from keys import *
+
 def setup_api():
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
+    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+    auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
     return tweepy.API(auth)
 
 def search_keyword(api, query, lang='en', count=100):
