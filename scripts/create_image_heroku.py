@@ -32,7 +32,7 @@ if __name__ == '__main__':
                                                      footer_font_file=footer_font_file,
                                                      show=False)
 
-    print(new_image_filename)
+    print('\nSaved as %s.' % new_image_filename)
     mmb.upload_image(image_screen_name,
                      image_tweet_id_str,
                      quote_screen_name,

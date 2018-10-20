@@ -33,6 +33,7 @@ def signature_width(img,
     sig_size = max(int(boundary / 2), min_font_size * 2)
 
     sig = user
+    print(footer_font_file)
     sig_font = ImageFont.truetype(footer_font_file, sig_size)
     sig_width, sig_height = sig_font.getsize(sig)
     return sig_width
@@ -72,7 +73,7 @@ def check_quote_width(img, name, screen_name, full_text,
     location, color = select_region_and_color(img)
     box_corners = get_box_corners(img, location=location)
 
-    all_lines, font_size, spacing, max_char_height = fit_text_to_box(box_corners, full_text, quote_font_file, equal_spacing=True)
+    all_lines, font_size, spacing, max_char_height = fit_text_to_box(box_corners, full_text, quote_font_file=quote_font_file, equal_spacing=True)
     return font_size >= min_font_size
 
 def check_footer_width(img, name, screen_name, footer_font_file='AppleGothic.ttf'):

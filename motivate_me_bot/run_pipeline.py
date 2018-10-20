@@ -55,12 +55,16 @@ def create_combined_image(image_keyword='#sunset',
     box_corners = get_box_corners(img, location=location)
 
     print('Finding quote...')
-    quote_name, quote_screen_name, quote_tweet_id_str, quote = find_quote(api, img, quote_keyword, quote_font_file)
+    quote_name, quote_screen_name, quote_tweet_id_str, quote = find_quote(api,
+                                                                img,
+                                                                quote_keyword,
+                                                                quote_font_file=quote_font_file,
+                                                                footer_font_file=footer_font_file)
 
     print('Fitting quote to image...')
     all_lines, font_size, spacing, max_char_height = fit_text_to_box(box_corners,
                                                                      quote,
-                                                                     quote_font_file,
+                                                                     quote_font_file=quote_font_file,
                                                                      equal_spacing=True)
 
     print('Writing quote to image...')
