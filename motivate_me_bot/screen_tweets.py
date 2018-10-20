@@ -46,12 +46,12 @@ def check_quote_quality(full_text):
         return False
     return True
 
-def screen_image_tweet(img, name, screen_name, full_text):
+def screen_image_tweet(img, name, screen_name, full_text, footer_font_file='AppleGothic.ttf'):
     '''Check whether the image is good enough to use'''
     return check_image_colors(img) \
-        and check_footer_width(img, name, screen_name)
+        and check_footer_width(img, name, screen_name, footer_font_file)
 
-def screen_quote_tweet(img, name, screen_name, full_text):
+def screen_quote_tweet(img, name, screen_name, full_text, quote_font_file='Apple Chancery.ttf'):
     '''Check whether the quote is good enough to use'''
-    return check_text_widths(img, name, screen_name, full_text) \
+    return check_text_widths(img, name, screen_name, full_text, quote_font_file) \
         and check_quote_quality(full_text)

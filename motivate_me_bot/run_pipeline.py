@@ -42,6 +42,7 @@ def create_combined_image(image_keyword='#sunset',
     print('Finding image...')
     image_name, image_screen_name, image_tweet_id_str, image_filename = find_image(api,
                                                                image_keyword,
+                                                               footer_font_file,
                                                                output_dir=download_dir,
                                                                min_dimensions = (1440, 1080))
 
@@ -54,7 +55,7 @@ def create_combined_image(image_keyword='#sunset',
     box_corners = get_box_corners(img, location=location)
 
     print('Finding quote...')
-    quote_name, quote_screen_name, quote_tweet_id_str, quote = find_quote(api, img, quote_keyword)
+    quote_name, quote_screen_name, quote_tweet_id_str, quote = find_quote(api, img, quote_keyword, quote_font_file)
 
     print('Fitting quote to image...')
     all_lines, font_size, spacing, max_char_height = fit_text_to_box(box_corners,
@@ -76,7 +77,7 @@ def create_combined_image(image_keyword='#sunset',
                       draw_box=False)
 
     print('Writing signature to image...')
-    draw_signature(img, font_file=footer_font_file)
+    draw_signature(img, footer_font_file=footer_font_file)
 
     print('Writing credits to image...')
     draw_credits(img,
@@ -84,7 +85,7 @@ def create_combined_image(image_keyword='#sunset',
                  quote_screen_name,
                  image_name,
                  image_screen_name,
-                 font_file=footer_font_file)
+                 footer_font_file=footer_font_file)
 
     print('Finished!')
     new_image_filename = new_dir + os.path.split(image_filename)[1]
@@ -100,9 +101,11 @@ def upload_image(image_screen_name,
                  image_tweet_id_str,
                  quote_screen_name,
                  quote_tweet_id_str,
-                 new_image_filename):
+                 new_image_filename,
+                 upload=True):
     api = setup_api()
     tweet_text = 'Image: @%s (https://twitter.com/%s/status/%s) | ' % (image_screen_name, image_screen_name, image_tweet_id_str) \
                + 'Quote: @%s (https://twitter.com/%s/status/%s)' % (quote_screen_name, quote_screen_name, quote_tweet_id_str)
     print('Status:', tweet_text)
-    api.update_with_media(new_image_filename, status=tweet_text)
+    if upload:
+        api.update_with_media(new_image_filename, status=tweet_text)

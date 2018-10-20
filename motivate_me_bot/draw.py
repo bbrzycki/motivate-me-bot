@@ -17,7 +17,7 @@ from blur import *
 def draw_quote_in_box(img,
                       box_corners,
                       all_lines=['Hello, world!'],
-                      font_file='Apple Chancery.ttf',
+                      quote_font_file='Apple Chancery.ttf',
                       font_size=14,
                       color=None,
                       min_font_size=14,
@@ -34,7 +34,7 @@ def draw_quote_in_box(img,
     box_width = x2 - x1
     box_height = y2 - y1
 
-    font = ImageFont.truetype(font_file, max(font_size, min_font_size))
+    font = ImageFont.truetype(quote_font_file, max(font_size, min_font_size))
 
     if max_char_height is None:
         # Compute max_char_height
@@ -70,7 +70,7 @@ def draw_quote_in_box(img,
 
 def draw_signature(img,
                    user='@MotivateMeBot',
-                   font_file='AppleGothic.ttf',
+                   footer_font_file='AppleGothic.ttf',
                    color=None,
                    min_font_size=14):
     draw = ImageDraw.Draw(img)
@@ -81,7 +81,7 @@ def draw_signature(img,
 
     # MotivateMeBot sig
     sig = user
-    sig_font = ImageFont.truetype(font_file, sig_size)
+    sig_font = ImageFont.truetype(footer_font_file, sig_size)
     sig_width, sig_height = sig_font.getsize(sig)
 
     background_box = (img_width - blur_boundary - sig_width - sig_size, img_height - blur_boundary - sig_height - sig_size,
@@ -102,7 +102,7 @@ def draw_credits(img,
                  quote_screen_name,
                  image_name,
                  image_screen_name,
-                 font_file='AppleGothic.ttf',
+                 footer_font_file='AppleGothic.ttf',
                  color=None,
                  min_font_size=14):
     draw = ImageDraw.Draw(img)
@@ -112,7 +112,7 @@ def draw_credits(img,
     cred_size = int(sig_size / 2)
     blur_boundary = int(cred_size / 2)
 
-    cred_font = ImageFont.truetype(font_file, cred_size)
+    cred_font = ImageFont.truetype(footer_font_file, cred_size)
 
     # Image Credit
     image_cred = 'Image Credit: %s (@%s)' % (image_name, image_screen_name)

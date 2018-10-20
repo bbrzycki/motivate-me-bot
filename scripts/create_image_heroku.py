@@ -1,13 +1,13 @@
 '''
 Scrapes Twitter and uploads a motivational image to the @MotivateMeBot account.
 
-Run this script from the scripts/ directory
+This script is run on Heroku from the home /app/ directory.
 '''
 
 import sys
 import os
 import errno
-sys.path.append('../')
+sys.path.append('./')
 
 import numpy as np
 
@@ -20,8 +20,8 @@ if __name__ == '__main__':
     quote_keyword = '#motivation'
     image_keyword = '#sunset'
 
-    quote_font_file = "../fonts/AppleChancery.ttf"
-    footer_font_file = "../fonts/AppleGothic.ttf"
+    quote_font_file = "/app/fonts/AppleChancery.ttf"
+    footer_font_file = "/app/fonts/AppleGothic.ttf"
 
     image_screen_name, image_tweet_id_str, quote_screen_name, \
         quote_tweet_id_str, new_image_filename = mmb.create_combined_image(image_keyword,
@@ -37,5 +37,4 @@ if __name__ == '__main__':
                      image_tweet_id_str,
                      quote_screen_name,
                      quote_tweet_id_str,
-                     new_image_filename,
-                     upload=False)
+                     new_image_filename)
