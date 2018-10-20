@@ -27,8 +27,10 @@ def check_appropriate(name, screen_name, full_text):
     Check whether the tweet uses inappropriate language (or keywords that are
     otherwise good to exclude, such as promotional material)
     '''
-    if '@' in full_text or '?' in full_text:
-        return False
+    bad_char = '@?$'
+    for char in bad_char:
+        if char in full_text:
+            return False
     exclude_words = []
     with open(os.path.join(os.path.dirname(__file__), 'bad-words.txt'), 'r') as f:
         bad_words = f.read()
