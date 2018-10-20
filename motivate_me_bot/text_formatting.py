@@ -11,7 +11,7 @@ import regex
 
 def fit_text_to_box(box_corners,
                     text,
-                    font_file='Apple Chancery.ttf',
+                    quote_font_file='Apple Chancery.ttf',
                     equal_spacing=True,
                     spacing_limit=2):
     '''Fit quote text to the box'''
@@ -34,7 +34,7 @@ def fit_text_to_box(box_corners,
         fits_horizontally = True
         fits_vertically = True
 
-        font = ImageFont.truetype(font_file, proposed_font_size)
+        font = ImageFont.truetype(quote_font_file, proposed_font_size)
 
         words = text.split()
         all_lines_temp = []

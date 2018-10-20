@@ -44,7 +44,7 @@ def create_combined_image(image_keyword='#sunset',
                                                                image_keyword,
                                                                footer_font_file,
                                                                output_dir=download_dir,
-                                                               min_dimensions = (1440, 1080))
+                                                               min_dimensions=(1440, 1080))
 
     img = get_image(image_filename)
     img_width, img_height = img.size
@@ -106,6 +106,9 @@ def upload_image(image_screen_name,
     api = setup_api()
     tweet_text = 'Image: @%s (https://twitter.com/%s/status/%s) | ' % (image_screen_name, image_screen_name, image_tweet_id_str) \
                + 'Quote: @%s (https://twitter.com/%s/status/%s)' % (quote_screen_name, quote_screen_name, quote_tweet_id_str)
-    print('Status:', tweet_text)
+    print('\nStatus:\n\n%s\n' % tweet_text)
     if upload:
         api.update_with_media(new_image_filename, status=tweet_text)
+        print('~ Uploaded to Twitter! ~')
+    else:
+        print('~ Not uploaded to Twitter ~')

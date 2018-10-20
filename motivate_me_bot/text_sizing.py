@@ -60,8 +60,8 @@ def full_credits_width(img,
                  image_screen_name,
                  footer_font_file='AppleGothic.ttf',
                  min_font_size=14):
-    image_cred_width = credit_width(img, image_name, image_screen_name, footer_font_file, min_font_size)
-    quote_cred_width = credit_width(img, quote_name, quote_screen_name, footer_font_file, min_font_size)
+    image_cred_width = credit_width(img, image_name, image_screen_name, footer_font_file=footer_font_file, min_font_size=min_font_size)
+    quote_cred_width = credit_width(img, quote_name, quote_screen_name, footer_font_file=footer_font_file, min_font_size=min_font_size)
     return max(image_cred_width, quote_cred_width)
 
 def check_quote_width(img, name, screen_name, full_text,
@@ -77,12 +77,6 @@ def check_quote_width(img, name, screen_name, full_text,
 
 def check_footer_width(img, name, screen_name, footer_font_file='AppleGothic.ttf'):
     boundary = get_boundary(img)
-    sig_width = signature_width(img, footer_font_file)
-    cred_width = credit_width(img, name, screen_name, footer_font_file)
+    sig_width = signature_width(img, footer_font_file=footer_font_file)
+    cred_width = credit_width(img, name, screen_name, footer_font_file=footer_font_file)
     return sig_width + cred_width <= img.width - 2 * boundary
-
-def check_text_widths(img, name, screen_name, full_text,
-                      quote_font_file='Apple Chancery.ttf',
-                      footer_font_file='AppleGothic.ttf'):
-    return check_footer_width(img, name, screen_name, footer_font_file) \
-        and check_quote_width(img, name, screen_name, full_text, quote_font_file)

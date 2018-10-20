@@ -78,7 +78,7 @@ def find_image(api,
                         # Check whether the image is good (for color / tweet content)
                         img = get_image(filename)
                         print('Image:', full_text)
-                        if screen_image_tweet(img, name, screen_name, full_text, footer_font_file):
+                        if screen_image_tweet(img, name, screen_name, footer_font_file=footer_font_file):
                             return name, screen_name, tweet_id_str, filename
     return -1
 
@@ -101,7 +101,7 @@ def find_quote(api,
             full_text = tweet_dict['full_text']
             if check_appropriate(name, screen_name, full_text):
                 filtered_text = filter_quote(full_text)
-                if screen_quote_tweet(img, name, screen_name, filtered_text, quote_font_file):
+                if screen_quote_tweet(img, name, screen_name, filtered_text, quote_font_file=quote_font_file):
                     return name, screen_name, tweet_id_str, filtered_text
     return -1
 
