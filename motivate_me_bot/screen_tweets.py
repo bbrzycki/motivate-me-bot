@@ -53,5 +53,5 @@ def screen_image_tweet(img, name, screen_name, full_text, footer_font_file='Appl
 
 def screen_quote_tweet(img, name, screen_name, full_text, quote_font_file='Apple Chancery.ttf'):
     '''Check whether the quote is good enough to use'''
-    return check_text_widths(img, name, screen_name, full_text, quote_font_file) \
+    return check_quote_width(img, name, screen_name, full_text, quote_font_file) \
         and check_quote_quality(full_text)
