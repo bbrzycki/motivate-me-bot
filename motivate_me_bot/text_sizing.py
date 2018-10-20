@@ -33,7 +33,6 @@ def signature_width(img,
     sig_size = max(int(boundary / 2), min_font_size * 2)
 
     sig = user
-    print(footer_font_file)
     sig_font = ImageFont.truetype(footer_font_file, sig_size)
     sig_width, sig_height = sig_font.getsize(sig)
     return sig_width

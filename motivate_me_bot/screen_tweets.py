@@ -8,6 +8,7 @@ import os
 
 import string
 import regex
+from emoji import UNICODE_EMOJI
 
 def check_website(text):
     return 'http' in text and '://' in text
@@ -15,11 +16,19 @@ def check_website(text):
 def check_hashtag(text):
     return text[0] == '#'
 
+def check_emoji(text):
+    for emoji in UNICODE_EMOJI:
+        if emoji in text:
+            return True
+    return False
+
 def check_appropriate(name, screen_name, full_text):
     '''
     Check whether the tweet uses inappropriate language (or keywords that are
     otherwise good to exclude, such as promotional material)
     '''
+    if '@' in full_text or '?' in full_text:
+        return False
     exclude_words = []
     with open(os.path.join(os.path.dirname(__file__), 'bad-words.txt'), 'r') as f:
         bad_words = f.read()

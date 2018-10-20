@@ -6,3 +6,5 @@ pprint
 autocorrect
 regex
 flask
+datetime
+emoji

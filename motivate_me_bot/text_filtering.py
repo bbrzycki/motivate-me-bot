@@ -14,9 +14,7 @@ def filter_quote(full_text, autocorrect=False):
     print(word_list)
     new_list = []
     for word in word_list:
-        if check_website(word):
-            pass
-        else:
+        if not check_website(word) and not check_emoji(word):
             new_list.append(word)
     word_list = new_list
     print(word_list)

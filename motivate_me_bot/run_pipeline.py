@@ -13,6 +13,7 @@ from screen_tweets import *
 from text_filtering import *
 from text_formatting import *
 from text_sizing import *
+from determine_tweet_content import *
 
 def create_combined_image(image_keyword='#sunset',
                           quote_keyword='#motivation',
@@ -91,25 +92,36 @@ def create_combined_image(image_keyword='#sunset',
                  image_screen_name,
                  footer_font_file=footer_font_file)
 
-    print('Finished!')
+    print('Finished creating image!')
     new_image_filename = new_dir + os.path.split(image_filename)[1]
     img.save(new_image_filename)
 
     if show:
         img.show()
 
+    print('Determining hashtags...')
+    char_limit = 279 - attribution_length(image_screen_name, quote_screen_name)
+    hashtag_str = find_hashtags(image_keyword,
+                                quote_keyword,
+                                quote,
+                                char_limit=char_limit)
+
     return image_screen_name, image_tweet_id_str, \
-        quote_screen_name, quote_tweet_id_str, new_image_filename
+        quote_screen_name, quote_tweet_id_str, hashtag_str, new_image_filename
 
 def upload_image(image_screen_name,
                  image_tweet_id_str,
                  quote_screen_name,
                  quote_tweet_id_str,
+                 hashtag_str,
                  new_image_filename,
                  upload=True):
     api = setup_api()
-    tweet_text = 'Image: @%s (https://twitter.com/%s/status/%s) | ' % (image_screen_name, image_screen_name, image_tweet_id_str) \
-               + 'Quote: @%s (https://twitter.com/%s/status/%s)' % (quote_screen_name, quote_screen_name, quote_tweet_id_str)
+    tweet_text = '%s %s' % (attribution_text(image_screen_name,
+                                             image_tweet_id_str,
+                                             quote_screen_name,
+                                             quote_tweet_id_str),
+                            hashtag_str)
     print('\nStatus:\n\n%s\n' % tweet_text)
     if upload:
         api.update_with_media(new_image_filename, status=tweet_text)

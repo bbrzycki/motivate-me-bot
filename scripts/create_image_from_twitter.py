@@ -24,18 +24,19 @@ if __name__ == '__main__':
     footer_font_file = "../fonts/AppleGothic.ttf"
 
     image_screen_name, image_tweet_id_str, quote_screen_name, \
-        quote_tweet_id_str, new_image_filename = mmb.create_combined_image(image_keyword,
-                                                     quote_keyword,
-                                                     download_dir,
-                                                     new_dir,
-                                                     quote_font_file=quote_font_file,
-                                                     footer_font_file=footer_font_file,
-                                                     show=False)
+        quote_tweet_id_str, hashtag_str, new_image_filename = mmb.create_combined_image(image_keyword,
+                                                                quote_keyword,
+                                                                download_dir,
+                                                                new_dir,
+                                                                quote_font_file=quote_font_file,
+                                                                footer_font_file=footer_font_file,
+                                                                show=False)
 
-    print('\nSaved as %s.' % new_image_filename)
+    print('\nImage saved at %s.' % new_image_filename)
     mmb.upload_image(image_screen_name,
                      image_tweet_id_str,
                      quote_screen_name,
                      quote_tweet_id_str,
+                     hashtag_str,
                      new_image_filename,
                      upload=False)
