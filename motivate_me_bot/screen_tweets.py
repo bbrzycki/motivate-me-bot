@@ -10,19 +10,31 @@ import string
 import regex
 from emoji import UNICODE_EMOJI
 
-def check_website(text):
+def is_website(text):
     return 'http' in text and '://' in text
 
-def check_hashtag(text):
+def contains_hashtag(text):
     return text[0] == '#'
 
-def check_emoji(text):
+def contains_emoji(text):
     for emoji in UNICODE_EMOJI:
         if emoji in text:
             return True
     return False
 
-def check_appropriate(name, screen_name, full_text):
+def is_punctuation(char):
+    punctuation = regex.compile(r'[\p{C}|\p{M}|\p{P}|\p{S}|\p{Z}]+', regex.UNICODE)
+    if punctuation.match(char) is None:
+        return False
+    return True
+
+def ends_with_punctuation(text):
+    i = -1
+    while text[i] == '\n':
+        i -= 1
+    return is_punctuation(text[i])
+
+def is_appropriate(name, screen_name, full_text):
     '''
     Check whether the tweet uses inappropriate language (or keywords that are
     otherwise good to exclude, such as promotional material)

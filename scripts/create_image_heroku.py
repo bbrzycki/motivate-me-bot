@@ -17,7 +17,7 @@ if __name__ == '__main__':
     download_dir = 'images/'
     new_dir = 'new_images/'
 
-    quote_keyword = '#motivation'
+    quote_keyword = '#motivation #inspiration'
     image_keyword = '#sunset'
 
     quote_font_file = "/app/fonts/AppleChancery.ttf"
