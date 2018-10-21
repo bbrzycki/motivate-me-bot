@@ -8,4 +8,3 @@ regex
 flask
 datetime
 emoji
-html
