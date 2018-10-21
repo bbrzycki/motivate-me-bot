@@ -88,8 +88,23 @@ def select_region_and_color(img, range=64):
     else: # minimum_shade == 'middle_dark'
         return 'middle', BLACK
 
-def check_image_colors(img):
+def check_image_colors(img,
+                       target_fraction=0.05,
+                       verification_range=16,
+                       selection_range=64):
     '''
     Filter out "bad" images.
     '''
-    return True
+    location, color = select_region_and_color(img, range=selection_range)
+    box = get_box_corners(img, location=location)
+    pixel_num = (box[2] - box[0]) * (box[3] - box[1])
+    light, dark = get_all_luminances(img, box, range=verification_range)
+    print('Total pixel num = %s' % pixel_num)
+    print('(light, dark) = (%s, %s)' % (light, dark))
+    print('Corresponding fractions: (%.4f, %.4f)' % (light / pixel_num, dark / pixel_num))
+    if color == WHITE:
+        print('Selected: WHITE')
+        return light / pixel_num < target_fraction
+    else:
+        print('Selected: BLACK')
+        return dark / pixel_num < target_fraction
