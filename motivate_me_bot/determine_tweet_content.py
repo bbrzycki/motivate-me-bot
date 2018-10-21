@@ -46,6 +46,7 @@ def find_hashtags(image_keyword, quote_keyword, quote, char_limit=60):
     else:
         daily_hashtags.append('SundayMood')
         daily_hashtags.append('SundayMotivation')
+        daily_hashtags.append('ThinkBIGSundayWithMarsha')
 
     remaining_char -= sum([2 + len(w) for w in daily_hashtags])
     hashtag_list.extend(daily_hashtags)
