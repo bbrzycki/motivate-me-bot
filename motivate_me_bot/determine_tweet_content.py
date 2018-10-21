@@ -17,11 +17,10 @@ def attribution_length(image_screen_name, quote_screen_name):
 
 def find_hashtags(image_keyword, quote_keyword, quote, char_limit=60):
     remaining_char = char_limit
-    if image_keyword[0] == '#':
-        image_keyword = image_keyword[1:]
-    if quote_keyword[0] == '#':
-        quote_keyword = quote_keyword[1:]
-    hashtag_list = [image_keyword, quote_keyword]
+
+    remove = regex.compile(r'[\p{C}|\p{M}|\p{P}|\p{S}|\p{Z}]+', regex.UNICODE)
+    keywords = '%s %s' % (image_keyword, quote_keyword)
+    hashtag_list = remove.sub(' ', keywords).split()
     remaining_char -= 3 + len(image_keyword) + len(quote_keyword)
 
     day_of_the_week = datetime.datetime.today().weekday()

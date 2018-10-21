@@ -64,7 +64,7 @@ def find_image(api,
                     screen_name = tweet_dict['user']['screen_name']
                     tweet_id_str = tweet_dict['id_str']
                     full_text = tweet_dict['full_text']
-                    if check_appropriate(name, screen_name, full_text):
+                    if is_appropriate(name, screen_name, full_text):
                         url = media_dict['media_url_https'] + ':' + resolution
 
                         filename = output_dir + url.split('/')[-1][:-(1 + len(resolution))]
@@ -103,7 +103,7 @@ def find_quote(api,
             screen_name = tweet_dict['user']['screen_name']
             tweet_id_str = tweet_dict['id_str']
             full_text = tweet_dict['full_text']
-            if check_appropriate(name, screen_name, full_text):
+            if is_appropriate(name, screen_name, full_text):
                 filtered_text = filter_quote(full_text)
                 if screen_quote_tweet(img,
                                       name,

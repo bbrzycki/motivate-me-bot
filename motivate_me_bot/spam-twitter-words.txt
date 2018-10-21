@@ -37,3 +37,5 @@ garage sale
 coupon
 discount
 merchandise
+clip
+video
