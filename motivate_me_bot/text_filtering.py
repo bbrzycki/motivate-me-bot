@@ -10,7 +10,7 @@ def filter_quote(full_text, autocorrect=False):
     '''Filter the tweet to be more presentable as a standalone quote'''
     # If a new line does *not* have punctuation, then add it,
     # otherwise don't add anything. Match using regex.
-    escaped = html.unescape(full_text)
+    escaped = html.unescape(full_text).replace('\xa0', ' ')
     stripped = '\n '.join([line.strip() for line in escaped.split('\n')])
     word_list = [word for word in stripped.split(' ') if word != '\n' and word != '']
     print('-'*20)
