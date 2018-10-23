@@ -8,3 +8,4 @@ regex
 flask
 datetime
 emoji
+tqdm

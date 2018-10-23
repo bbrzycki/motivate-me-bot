@@ -5,7 +5,8 @@ import sys
 from pprint import pprint
 import shutil
 import requests
-from requests_oauthlib import OAuth1
+import time
+from tqdm import tqdm
 
 from text_color import *
 from screen_tweets import *
@@ -20,9 +21,12 @@ try:
     ACCESS_TOKEN = environ['ACCESS_TOKEN']
     ACCESS_TOKEN_SECRET = environ['ACCESS_TOKEN_SECRET']
 except KeyError:
-    from keys import *
+    from keys import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
 
 def setup_api():
+    '''
+    Set up api for Twitter interactions using tweepy.
+    '''
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
     return tweepy.API(auth)
@@ -44,17 +48,18 @@ def find_image(api,
                resolution='large',
                min_dimensions = (1440, 1080),
                lang='en',
+               min_follower_count=1000,
                count=100):
     while True:
-        results = search_keyword(api, query)
-        for tweet in results:
+        results = search_keyword(api, query, lang=lang, count=count)
+        for tweet in tqdm(results):
             tweet_dict = vars(tweet)['_json']
             # Check whether tweet is retweet -- if so, point to retweet instead
             if 'retweeted_status' in tweet_dict.keys():
                 tweet_dict = tweet_dict['retweeted_status']
-
+            # pprint(tweet_dict)
             # Check if the tweet contains media
-            if 'extended_entities' in tweet_dict.keys():
+            if 'extended_entities' in tweet_dict.keys() and tweet_dict['user']['followers_count'] >= min_follower_count:
                 media_dict = tweet_dict['extended_entities']['media'][0]
                 dimensions = media_dict['sizes'][resolution]
                 w, h = dimensions['w'], dimensions['h']
@@ -83,6 +88,9 @@ def find_image(api,
                                               screen_name,
                                               footer_font_file=footer_font_file):
                             return name, screen_name, tweet_id_str, filename
+        # Wait a bit before searching again
+        print('Resuming image search in 60 seconds...')
+        time.sleep(60)
     return -1
 
 def find_quote(api,
@@ -91,27 +99,32 @@ def find_quote(api,
                quote_font_file='Apple Chancery.ttf',
                footer_font_file='AppleGothic.ttf',
                lang='en',
+               min_follower_count=1000,
                count=100):
     while True:
-        results = search_keyword(api, query)
-        for tweet in results:
+        results = search_keyword(api, query, lang=lang, count=count)
+        for tweet in tqdm(results):
             tweet_dict = vars(tweet)['_json']
             # Check whether tweet is retweet -- if so, point to retweet instead
             if 'retweeted_status' in tweet_dict.keys():
                 tweet_dict = tweet_dict['retweeted_status']
-            name = tweet_dict['user']['name']
-            screen_name = tweet_dict['user']['screen_name']
-            tweet_id_str = tweet_dict['id_str']
-            full_text = tweet_dict['full_text']
-            if is_appropriate(name, screen_name, full_text):
-                filtered_text = filter_quote(full_text)
-                if screen_quote_tweet(img,
-                                      name,
-                                      screen_name,
-                                      filtered_text,
-                                      quote_font_file=quote_font_file,
-                                      footer_font_file=footer_font_file):
-                    return name, screen_name, tweet_id_str, filtered_text
+            if tweet_dict['user']['followers_count'] >= min_follower_count:
+                name = tweet_dict['user']['name']
+                screen_name = tweet_dict['user']['screen_name']
+                tweet_id_str = tweet_dict['id_str']
+                full_text = tweet_dict['full_text']
+                if is_appropriate(name, screen_name, full_text):
+                    filtered_text = filter_quote(full_text)
+                    if screen_quote_tweet(img,
+                                          name,
+                                          screen_name,
+                                          filtered_text,
+                                          quote_font_file=quote_font_file,
+                                          footer_font_file=footer_font_file):
+                        return name, screen_name, tweet_id_str, filtered_text
+        # Wait a bit before searching again
+        print('Resuming quote search in 60 seconds...')
+        time.sleep(60)
     return -1
 
 if __name__ == '__main__':
