@@ -6,7 +6,6 @@ from pprint import pprint
 import shutil
 import requests
 import time
-from tqdm import tqdm
 
 from text_color import *
 from screen_tweets import *
@@ -48,11 +47,11 @@ def find_image(api,
                resolution='large',
                min_dimensions = (1440, 1080),
                lang='en',
-               min_follower_count=1000,
+               min_follower_count=500,
                count=100):
     while True:
         results = search_keyword(api, query, lang=lang, count=count)
-        for tweet in tqdm(results):
+        for tweet in results:
             tweet_dict = vars(tweet)['_json']
             # Check whether tweet is retweet -- if so, point to retweet instead
             if 'retweeted_status' in tweet_dict.keys():
@@ -99,11 +98,11 @@ def find_quote(api,
                quote_font_file='Apple Chancery.ttf',
                footer_font_file='AppleGothic.ttf',
                lang='en',
-               min_follower_count=1000,
+               min_follower_count=500,
                count=100):
     while True:
         results = search_keyword(api, query, lang=lang, count=count)
-        for tweet in tqdm(results):
+        for tweet in results:
             tweet_dict = vars(tweet)['_json']
             # Check whether tweet is retweet -- if so, point to retweet instead
             if 'retweeted_status' in tweet_dict.keys():

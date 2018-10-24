@@ -51,14 +51,6 @@ def find_hashtags(image_keyword, quote_keyword, quote, char_limit=60):
     remaining_char -= sum([2 + len(w) for w in daily_hashtags])
     hashtag_list.extend(daily_hashtags)
 
-    # remove = regex.compile(r'[\p{C}|\p{M}|\p{P}|\p{S}|\p{Z}]+', regex.UNICODE)
-    # quote = remove.sub(' ', quote)
-    # for word in quote.split():
-    #     if remaining_char < 6:
-    #         break
-    #     if len(word) >= 6 and len(word) <=10 and 2 + len(word) <= remaining_char:
-    #         hashtag_list.append(word.lower())
-    #         remaining_char -= 2 + len(word)
     if remaining_char > 2:
         with open(os.path.join(os.path.dirname(__file__), 'hashtag-words.txt'), 'r') as f:
             hashtag_words = f.read().split('\n')

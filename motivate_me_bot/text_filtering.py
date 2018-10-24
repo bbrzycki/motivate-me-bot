@@ -8,9 +8,14 @@ from autocorrect import spell
 
 def filter_quote(full_text, autocorrect=False):
     '''Filter the tweet to be more presentable as a standalone quote'''
-    # If a new line does *not* have punctuation, then add it,
-    # otherwise don't add anything. Match using regex.
-    escaped = html.unescape(full_text).replace('\xa0', ' ')
+
+    # Unescaping html characters (such as &amp and &quot), and manually replace
+    # &nbsp ('\xa0'). Further, make sure hashtags get split even if they
+    # accidentally don't have whitespace in the original tweet.
+    escaped = html.unescape(full_text).replace('\xa0', ' ').replace('#', ' #')
+
+    # Split by words, but keep newline character with the word at the end of
+    # each line (to handle line-ending punctuation later).
     stripped = '\n '.join([line.strip() for line in escaped.split('\n')])
     word_list = [word for word in stripped.split(' ') if word != '\n' and word != '']
     print('-'*20)
@@ -34,6 +39,8 @@ def filter_quote(full_text, autocorrect=False):
             except AttributeError:
                 pass
 
+    # If a new line does *not* have punctuation, then add it,
+    # otherwise don't add anything. Match using regex.
     for i in range(len(word_list)):
         if i == 0:
             word_list[i] = word_list[i][0].upper() + word_list[i][1:]
@@ -49,6 +56,8 @@ def filter_quote(full_text, autocorrect=False):
                 if i < len(word_list) - 1:
                     word_list[i] = word_list[i][:-1]
                     word_list[i + 1] = word_list[i + 1][0].upper() + word_list[i + 1][1:]
+        elif i == len(word_list) - 1 and not is_punctuation(word_list[i][-1]):
+            word_list[i] = word_list[i] + '.'
 
     print(word_list)
     filtered = ' '.join(word_list)
