@@ -93,10 +93,12 @@ def create_combined_image(image_keyword='#sunset',
                  image_screen_name,
                  footer_font_file=footer_font_file)
 
-    print('Following image and quote tweeters...')
     if follow_credits:
+        print('Following image and quote tweeters...')
         api.create_friendship(screen_name=image_screen_name)
         api.create_friendship(screen_name=quote_screen_name)
+    else:
+        print('Not following image and quote tweeters...')
 
     print('Finished creating image!')
     new_image_filename = new_dir + os.path.split(image_filename)[1]
