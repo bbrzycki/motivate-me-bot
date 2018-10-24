@@ -39,10 +39,13 @@ def is_appropriate(name, screen_name, full_text):
     Check whether the tweet uses inappropriate language (or keywords that are
     otherwise good to exclude, such as promotional material)
     '''
+    # Exclude a few characters that generally correspond to lower quality quotes
     bad_char = '@?$'
     for char in bad_char:
         if char in full_text:
             return False
+
+    # Built list of words to exclude from text
     exclude_words = []
     with open(os.path.join(os.path.dirname(__file__), 'bad-words.txt'), 'r') as f:
         bad_words = f.read()
@@ -51,16 +54,23 @@ def is_appropriate(name, screen_name, full_text):
         spam_words = f.read()
         exclude_words.extend(spam_words.split('\n'))
 
-    all_text = "%s %s %s" % (name, screen_name, full_text)
+    # Name can have multiple words, so compare this alongside tweet text
+    all_text = "%s %s" % (name, full_text)
 
+    # Replace punctuation with spaces using regex
     remove = regex.compile(r'[\p{C}|\p{M}|\p{P}|\p{S}|\p{Z}]+', regex.UNICODE)
     all_text = remove.sub(' ', all_text)
 
-    word_list = all_text.replace('\n', ' ').split()
+    # Compare all excluded words / phrases to all relevant text
     for word in exclude_words:
-        if word.lower() in [w.lower() for w in word_list]:
+        # If word appears in any form in the screen_name, return False
+        if word in screen_name.lower():
             return False
-
+        # Check word (separated by spaces), force lowercase to prevent case issues
+        compare_string = ' ' + word.lower() + ' '
+        full_string = all_text.replace('\n', ' ').lower()
+        if compare_string in full_string:
+            return False
     return True
 
 def check_quote_quality(full_text):

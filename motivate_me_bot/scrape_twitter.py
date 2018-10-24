@@ -112,6 +112,8 @@ def find_quote(api,
                 screen_name = tweet_dict['user']['screen_name']
                 tweet_id_str = tweet_dict['id_str']
                 full_text = tweet_dict['full_text']
+                # full_text = 'blogger is a test on whether it will catch all the #hashtags #correctly. ' \
+                #     + ' #1\n #2 #3 #4\n #5 #6'
                 if is_appropriate(name, screen_name, full_text):
                     filtered_text = filter_quote(full_text)
                     if screen_quote_tweet(img,

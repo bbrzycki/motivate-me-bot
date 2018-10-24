@@ -21,6 +21,7 @@ def create_combined_image(image_keyword='#sunset',
                           new_dir='new_images/',
                           quote_font_file='Apple Chancery.ttf',
                           footer_font_file='AppleGothic.ttf',
+                          follow_credits=True,
                           show=False):
     if download_dir[-1] != '/':
         download_dir = download_dir + '/'
@@ -93,8 +94,9 @@ def create_combined_image(image_keyword='#sunset',
                  footer_font_file=footer_font_file)
 
     print('Following image and quote tweeters...')
-    api.create_friendship(screen_name=image_screen_name)
-    api.create_friendship(screen_name=quote_screen_name)
+    if follow_credits:
+        api.create_friendship(screen_name=image_screen_name)
+        api.create_friendship(screen_name=quote_screen_name)
 
     print('Finished creating image!')
     new_image_filename = new_dir + os.path.split(image_filename)[1]
