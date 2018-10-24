@@ -30,6 +30,7 @@ if __name__ == '__main__':
                                                                 new_dir,
                                                                 quote_font_file=quote_font_file,
                                                                 footer_font_file=footer_font_file,
+                                                                follow_credits=False,
                                                                 show=False)
 
     print('\nImage saved at %s.' % new_image_filename)
