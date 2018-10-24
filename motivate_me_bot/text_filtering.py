@@ -56,6 +56,8 @@ def filter_quote(full_text, autocorrect=False):
                 if i < len(word_list) - 1:
                     word_list[i] = word_list[i][:-1]
                     word_list[i + 1] = word_list[i + 1][0].upper() + word_list[i + 1][1:]
+        elif i == len(word_list) - 1 and not is_punctuation(word_list[i][-1]):
+            word_list[i] = word_list[i] + '.'
 
     print(word_list)
     filtered = ' '.join(word_list)
