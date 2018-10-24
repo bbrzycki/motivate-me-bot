@@ -68,7 +68,8 @@ def find_image(api,
                     screen_name = tweet_dict['user']['screen_name']
                     tweet_id_str = tweet_dict['id_str']
                     full_text = tweet_dict['full_text']
-                    if is_appropriate(name, screen_name, full_text):
+                    if is_appropriate(name, screen_name, full_text, tweet_type='image'):
+                        print(name, screen_name, full_text)
                         url = media_dict['media_url_https'] + ':' + resolution
 
                         filename = output_dir + url.split('/')[-1][:-(1 + len(resolution))]
@@ -114,7 +115,7 @@ def find_quote(api,
                 full_text = tweet_dict['full_text']
                 # full_text = 'blogger is a test on whether it will catch all the #hashtags #correctly. ' \
                 #     + ' #1\n #2 #3 #4\n #5 #6'
-                if is_appropriate(name, screen_name, full_text):
+                if is_appropriate(name, screen_name, full_text, tweet_type='quote'):
                     filtered_text = filter_quote(full_text)
                     if screen_quote_tweet(img,
                                           name,
