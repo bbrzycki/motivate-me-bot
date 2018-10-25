@@ -3,15 +3,7 @@ Scrapes Twitter and uploads a motivational image to the @MotivateMeBot account.
 
 This script is run on Heroku from the home /app/ directory.
 '''
-
-import sys
-import os
-import errno
-sys.path.append('./')
-
-import numpy as np
-
-import motivate_me_bot as mmb
+from context import motivatemebot as mmb
 
 if __name__ == '__main__':
     download_dir = 'images/'

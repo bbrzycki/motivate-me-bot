@@ -8,7 +8,7 @@ import numpy as np
 import sys
 import os
 
-from image_sizing import *
+from image_sizing import get_image, get_boundary, get_box_corners
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)

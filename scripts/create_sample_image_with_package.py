@@ -1,11 +1,4 @@
-import sys
-import os
-sys.path.append('../')
-
-from PIL import Image, ImageFont, ImageDraw, ImageFilter
-import numpy as np
-
-import motivate_me_bot as mmb
+from context import motivatemebot as mmb
 
 if __name__ == '__main__':
     img = mmb.get_image('../images/flowers.jpg')

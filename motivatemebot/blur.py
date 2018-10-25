@@ -8,7 +8,7 @@ import numpy as np
 import sys
 import os
 
-from image_sizing import *
+from image_sizing import get_image, get_boundary, get_box_corners
 
 def draw_box(img, box, line_width=1):
     '''Draw a rectangular box on the image'''

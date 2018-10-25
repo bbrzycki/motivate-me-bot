@@ -1,18 +1,19 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-import sys
-import os
-sys.path.append('../')
-
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 from PIL import ImageFilter
 
-import motivate_me_bot as mmb
+from context import motivatemebot as mmb
 
 if __name__ == '__main__':
+    # img = mmb.get_image('../images/flowers.jpg')
+    img = mmb.get_image('../images/elizabeth_lab.jpg')
+    # img = mmb.get_image('../images/chris.jpg')
+    # img = mmb.get_image('../images/github_page.jpg')
+    
     img_width, img_height = img.size
 
     boundary = int(img_height / 15)

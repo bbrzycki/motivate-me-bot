@@ -1,7 +1,4 @@
-import sys
-sys.path.append('../')
-from pprint import pprint
-import motivate_me_bot as mmb
+from context import motivatemebot as mmb
 
 if __name__ == '__main__':
     api = mmb.setup_api()

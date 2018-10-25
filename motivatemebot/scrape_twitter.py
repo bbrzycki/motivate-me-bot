@@ -7,11 +7,15 @@ import shutil
 import requests
 import time
 
-from text_color import *
-from screen_tweets import *
-from image_sizing import *
-from text_sizing import *
-from text_filtering import *
+from text_color import average_color, average_contrast_color, get_all_luminances, \
+    overall_contrast_color, select_region_and_color, check_image_colors
+from screen_tweets import is_website, contains_hashtag, contains_emoji, \
+    is_punctuation, ends_with_punctuation, is_appropriate, check_quote_quality, \
+    screen_image_tweet, screen_quote_tweet
+from image_sizing import get_image, get_boundary, get_box_corners
+from text_sizing import quote_width, signature_width, credit_width, full_credits_width, \
+    check_quote_width, check_footer_width
+from text_filtering import filter_quote
 
 try:
     from os import environ
