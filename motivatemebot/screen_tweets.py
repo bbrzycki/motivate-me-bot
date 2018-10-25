@@ -15,6 +15,8 @@ def is_website(text):
     return 'http' in text and '://' in text
 
 def contains_hashtag(text):
+    if text == '':
+        return False
     return text[0] == '#'
 
 def contains_emoji(text):

@@ -19,7 +19,8 @@ from text_sizing import quote_width, signature_width, credit_width, full_credits
     check_quote_width, check_footer_width
 from determine_tweet_content import attribution_text, attribution_length, find_hashtags
 
-def create_combined_image(image_keyword='#sunset',
+def create_combined_image(api,
+                          image_keyword='#sunset',
                           quote_keyword='#motivation',
                           download_dir='images/',
                           new_dir='new_images/',
@@ -42,8 +43,6 @@ def create_combined_image(image_keyword='#sunset',
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
-
-    api = setup_api()
 
     print('Finding image...')
     image_name, image_screen_name, image_tweet_id_str, image_filename = find_image(api,
@@ -121,14 +120,14 @@ def create_combined_image(image_keyword='#sunset',
     return image_screen_name, image_tweet_id_str, \
         quote_screen_name, quote_tweet_id_str, hashtag_str, new_image_filename
 
-def upload_image(image_screen_name,
+def upload_image(api,
+                 image_screen_name,
                  image_tweet_id_str,
                  quote_screen_name,
                  quote_tweet_id_str,
                  hashtag_str,
                  new_image_filename,
                  upload=True):
-    api = setup_api()
     tweet_text = '%s %s' % (attribution_text(image_screen_name,
                                              image_tweet_id_str,
                                              quote_screen_name,

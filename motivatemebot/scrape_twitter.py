@@ -17,21 +17,12 @@ from text_sizing import quote_width, signature_width, credit_width, full_credits
     check_quote_width, check_footer_width
 from text_filtering import filter_quote
 
-try:
-    from os import environ
-    CONSUMER_KEY = environ['CONSUMER_KEY']
-    CONSUMER_SECRET = environ['CONSUMER_SECRET']
-    ACCESS_TOKEN = environ['ACCESS_TOKEN']
-    ACCESS_TOKEN_SECRET = environ['ACCESS_TOKEN_SECRET']
-except KeyError:
-    from keys import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
-
-def setup_api():
+def setup_api(consumer_key, consumer_secret, access_token, access_token_secret):
     '''
     Set up api for Twitter interactions using tweepy.
     '''
-    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-    auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
     return tweepy.API(auth)
 
 def search_keyword(api,
