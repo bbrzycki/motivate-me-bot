@@ -1,7 +1,18 @@
 from context import motivatemebot as mmb
 
 if __name__ == '__main__':
-    api = mmb.setup_api()
+    try:
+        # Get API keys stored as environmental variables
+        from os import environ
+        CONSUMER_KEY = environ['CONSUMER_KEY']
+        CONSUMER_SECRET = environ['CONSUMER_SECRET']
+        ACCESS_TOKEN = environ['ACCESS_TOKEN']
+        ACCESS_TOKEN_SECRET = environ['ACCESS_TOKEN_SECRET']
+    except KeyError:
+        # Otherwise, get API keys stored in a hidden script keys.py in this directory
+        from keys import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
+
+    api = mmb.setup_api(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
     query = '#motivation'
     results = mmb.search_keyword(api, query)
