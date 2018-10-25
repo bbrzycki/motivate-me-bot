@@ -8,30 +8,33 @@ import regex
 import html
 from autocorrect import spell
 
-def filter_quote(full_text, autocorrect=False):
+def filter_quote(full_text, autocorrect=False, verbose=False):
     '''Filter the tweet to be more presentable as a standalone quote'''
 
     # Unescaping html characters (such as &amp and &quot), and manually replace
     # &nbsp ('\xa0'). Further, make sure hashtags get split even if they
     # accidentally don't have whitespace in the original tweet.
     escaped = html.unescape(full_text).replace('\xa0', ' ').replace('#', ' #')
-
+    escaped = escaped.replace('…', '')
     # Split by words, but keep newline character with the word at the end of
     # each line (to handle line-ending punctuation later).
     stripped = '\n '.join([line.strip() for line in escaped.split('\n')])
     word_list = [word for word in stripped.split(' ') if word != '\n' and word != '']
-    print('-'*20)
-    print(full_text)
-    print(word_list)
+    if verbose:
+        print('-'*20)
+        print(full_text)
+        print(word_list)
     new_list = []
     for word in word_list:
         if not is_website(word) and not contains_emoji(word):
             new_list.append(word)
     word_list = new_list
-    print(word_list)
+    if verbose:
+        print(word_list)
     while contains_hashtag(word_list[-1]) and not ends_with_punctuation(word_list[-1]):
         del word_list[-1]
-    print(word_list)
+    if verbose:
+        print(word_list)
     for i, word in enumerate(word_list):
         if contains_hashtag(word):
             word_list[i] = word[1:]
@@ -60,10 +63,10 @@ def filter_quote(full_text, autocorrect=False):
                     word_list[i + 1] = word_list[i + 1][0].upper() + word_list[i + 1][1:]
         elif i == len(word_list) - 1 and not is_punctuation(word_list[i][-1]):
             word_list[i] = word_list[i] + '.'
-
-    print(word_list)
+    if verbose:
+        print(word_list)
     filtered = ' '.join(word_list)
-    print(filtered)
-
-    print('-'*20)
+    if verbose:
+        print(filtered)
+        print('-'*20)
     return filtered

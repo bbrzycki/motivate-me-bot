@@ -43,7 +43,8 @@ def find_image(api,
                min_dimensions = (1440, 1080),
                lang='en',
                min_follower_count=500,
-               count=100):
+               count=100,
+               verbose=True):
     while True:
         results = search_keyword(api, query, lang=lang, count=count)
         for tweet in results:
@@ -95,7 +96,8 @@ def find_quote(api,
                footer_font_file='AppleGothic.ttf',
                lang='en',
                min_follower_count=500,
-               count=100):
+               count=100,
+               verbose=True):
     while True:
         results = search_keyword(api, query, lang=lang, count=count)
         for tweet in results:
@@ -111,7 +113,7 @@ def find_quote(api,
                 # full_text = 'blogger is a test on whether it will catch all the #hashtags #correctly. ' \
                 #     + ' #1\n #2 #3 #4\n #5 #6'
                 if is_appropriate(name, screen_name, full_text, tweet_type='quote'):
-                    filtered_text = filter_quote(full_text)
+                    filtered_text = filter_quote(full_text, verbose=verbose)
                     if screen_quote_tweet(img,
                                           name,
                                           screen_name,

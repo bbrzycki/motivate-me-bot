@@ -32,6 +32,7 @@ def is_punctuation(char):
     return True
 
 def ends_with_punctuation(text):
+    # Specifically excluding newline characters
     i = -1
     while text[i] == '\n':
         i -= 1
