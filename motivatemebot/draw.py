@@ -8,11 +8,12 @@ import numpy as np
 import sys
 import os
 
-from text_color import *
+from text_color import average_color, average_contrast_color, get_all_luminances, \
+    overall_contrast_color, select_region_and_color, check_image_colors
 
-from image_sizing import get_boundary, get_box_corners
+from image_sizing import get_image, get_boundary, get_box_corners
 
-from blur import *
+from blur import draw_box, constant_blur, gradient_blur
 
 def draw_quote_in_box(img,
                       box_corners,

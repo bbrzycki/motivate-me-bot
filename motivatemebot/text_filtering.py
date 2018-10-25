@@ -1,4 +1,6 @@
-from screen_tweets import *
+from screen_tweets import is_website, contains_hashtag, contains_emoji, \
+    is_punctuation, ends_with_punctuation, is_appropriate, check_quote_quality, \
+    screen_image_tweet, screen_quote_tweet
 
 import sys
 import os

@@ -1,7 +1,8 @@
-from image_sizing import *
-from text_sizing import *
-from text_formatting import *
-from text_color import *
+from text_formatting import fit_text_to_box
+from text_sizing import quote_width, signature_width, credit_width, full_credits_width, \
+    check_quote_width, check_footer_width
+from text_color import average_color, average_contrast_color, get_all_luminances, \
+    overall_contrast_color, select_region_and_color, check_image_colors
 
 import sys
 import os
@@ -62,7 +63,7 @@ def is_appropriate(name, screen_name, full_text, tweet_type='quote'):
     # Replace punctuation with spaces using regex
     remove = regex.compile(r'[\p{C}|\p{M}|\p{P}|\p{S}|\p{Z}]+', regex.UNICODE)
     all_text = remove.sub(' ', all_text).lower()
-    all_text = ' '.join(all_text.strip())
+    all_text = ' '.join(all_text.strip().split())
 
     # Compare all excluded words / phrases to all relevant text
     for word in exclude_words:

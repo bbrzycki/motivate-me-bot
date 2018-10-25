@@ -1,12 +1,5 @@
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw
-from PIL import ImageFilter
-
-import numpy as np
-
 import sys
-import os
+from PIL import Image
 
 def get_image(image_path):
     return Image.open(image_path)

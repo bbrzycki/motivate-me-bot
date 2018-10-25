@@ -8,9 +8,10 @@ import numpy as np
 import sys
 import os
 
-from image_sizing import *
-from text_formatting import *
-from text_color import *
+from image_sizing import get_image, get_boundary, get_box_corners
+from text_formatting import fit_text_to_box
+from text_color import average_color, average_contrast_color, get_all_luminances, \
+    overall_contrast_color, select_region_and_color, check_image_colors
 
 def quote_width(img,
                   all_lines=['Hello, world!'],

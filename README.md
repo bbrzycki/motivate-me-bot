@@ -3,4 +3,4 @@
 
 Example scripts located in `scripts/`! Specifically, `create_image_from_twitter.py` runs the tweet scraping / image & text editing pipeline. 
 
-To run on your local machine, you'll need a Twitter Developer account and place the (4) keys in a file called `keys.py` within the `motivate_me_bot/` directory. 
+To run on your local machine, you'll need a Twitter Developer account and place the (4) keys in a file called `keys.py` within the `motivatemebot/` directory. 
