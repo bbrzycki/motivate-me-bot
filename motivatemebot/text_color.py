@@ -89,7 +89,7 @@ def select_region_and_color(img, range=64):
         return 'middle', BLACK
 
 def check_image_colors(img,
-                       target_fraction=0.001,
+                       target_fraction=0.0001,
                        verification_range=16,
                        selection_range=64):
     '''

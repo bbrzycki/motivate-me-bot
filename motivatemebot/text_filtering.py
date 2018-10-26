@@ -58,10 +58,10 @@ def filter_quote(full_text, autocorrect=False, verbose=False):
                 else:
                     word_list[i] = word_list[i][:-1] + '.'
             else:
-                if i < len(word_list) - 1:
-                    word_list[i] = word_list[i][:-1]
+                word_list[i] = word_list[i][:-1]
+                if i < len(word_list) - 1 and not word_list[i][-1] in ',:;-':
                     word_list[i + 1] = word_list[i + 1][0].upper() + word_list[i + 1][1:]
-        elif i == len(word_list) - 1 and not is_punctuation(word_list[i][-1]):
+        if i == len(word_list) - 1 and not is_punctuation(word_list[i][-1]):
             word_list[i] = word_list[i] + '.'
     if verbose:
         print(word_list)
