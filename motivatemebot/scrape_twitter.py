@@ -65,7 +65,6 @@ def find_image(api,
                     tweet_id_str = tweet_dict['id_str']
                     full_text = tweet_dict['full_text']
                     if is_appropriate(name, screen_name, full_text, tweet_type='image'):
-                        print(name, screen_name, full_text)
                         url = media_dict['media_url_https'] + ':' + resolution
 
                         filename = output_dir + url.split('/')[-1][:-(1 + len(resolution))]
