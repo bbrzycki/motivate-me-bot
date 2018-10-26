@@ -51,14 +51,17 @@ def is_appropriate(name, screen_name, full_text, tweet_type='quote'):
                 return False
 
     # Built list of words to exclude from text
-    exclude_words = []
+    single_exclude_words = []
     with open(os.path.join(os.path.dirname(__file__), 'bad-words.txt'), 'r') as f:
         bad_words = f.read()
-        exclude_words.extend(bad_words.split('\n'))
+        single_exclude_words.extend(bad_words.split('\n'))
     if tweet_type == 'quote':
-        with open(os.path.join(os.path.dirname(__file__), 'spam-twitter-words.txt'), 'r') as f:
-            spam_words = f.read()
-            exclude_words.extend(spam_words.split('\n'))
+        with open(os.path.join(os.path.dirname(__file__), 'spam-twitter-words-single.txt'), 'r') as f:
+            spam_words_single = f.read()
+            single_exclude_words.extend(spam_words_single.split('\n'))
+        with open(os.path.join(os.path.dirname(__file__), 'spam-twitter-words-multiple.txt'), 'r') as f:
+            spam_words_multiple = f.read()
+            multiple_exclude_words = spam_words_multiple.split('\n')
 
     # Name can have multiple words, so compare this alongside tweet text
     all_text = "%s %s %s" % (name, screen_name, full_text)
@@ -69,11 +72,21 @@ def is_appropriate(name, screen_name, full_text, tweet_type='quote'):
     all_text = ' '.join(all_text.strip().split())
 
     # Compare all excluded words / phrases to all relevant text
-    for word in exclude_words:
+    for word in single_exclude_words:
         stripped = word.strip().lower()
         # Check word (separated by spaces), force lowercase to prevent case issues
         compare_string = ' ' + stripped + ' '
         if stripped != '' and compare_string in all_text:
+            return False
+    if tweet_type == 'quote':
+        match_count = 0
+        for word in multiple_exclude_words:
+            stripped = word.strip().lower()
+            # Check word (separated by spaces), force lowercase to prevent case issues
+            compare_string = ' ' + stripped + ' '
+            if stripped != '' and compare_string in all_text:
+                match_count += 1
+        if match_count > 1:
             return False
 
     # TODO: Decide how to exclude certain screen names
@@ -87,7 +100,7 @@ def is_appropriate(name, screen_name, full_text, tweet_type='quote'):
 def check_quote_quality(full_text):
     '''Somehow determine the quality of the resulting quote'''
     # Make sure the length of the quote is something substantial
-    if len(full_text.split()) < 8:
+    if len(full_text.split()) < 6:
         return False
     return True
 
