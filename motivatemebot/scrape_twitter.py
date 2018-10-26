@@ -110,8 +110,6 @@ def find_quote(api,
                 screen_name = tweet_dict['user']['screen_name']
                 tweet_id_str = tweet_dict['id_str']
                 full_text = tweet_dict['full_text']
-                full_text = 'maybe 1 2 3 4 will work,\n without capitalizing ' \
-                    + ' #1\n #2 #3 #4\n #5 #6'
                 if is_appropriate(name, screen_name, full_text, tweet_type='quote'):
                     filtered_text = filter_quote(full_text, verbose=verbose)
                     if screen_quote_tweet(img,
