@@ -13,7 +13,6 @@ def get_box_corners(img, location='top'):
 
     boundary = get_boundary(img)
     box_width = img_width - 2 * boundary
-    box_height = int(img_height / 2) - 2 * boundary
 
     x1 = boundary
     x2 = x1 + box_width

@@ -1,12 +1,14 @@
-from screen_tweets import is_website, contains_hashtag, contains_emoji, \
-    is_punctuation, ends_with_punctuation, is_appropriate, check_quote_quality, \
-    screen_image_tweet, screen_quote_tweet
-
-import sys
-import os
-import regex
 import html
+import os
+import sys
+
+import regex
 from autocorrect import spell
+
+from screen_tweets import (check_quote_quality, contains_emoji,
+                           contains_hashtag, ends_with_punctuation,
+                           is_appropriate, is_punctuation, is_website,
+                           screen_image_tweet, screen_quote_tweet)
 
 def filter_quote(full_text, autocorrect=False, verbose=False):
     '''Filter the tweet to be more presentable as a standalone quote'''
@@ -27,6 +29,7 @@ def filter_quote(full_text, autocorrect=False, verbose=False):
     new_list = []
     for word in word_list:
         if not is_website(word) and not contains_emoji(word):
+        # if not contains_emoji(word):
             new_list.append(word)
     word_list = new_list
     if verbose:

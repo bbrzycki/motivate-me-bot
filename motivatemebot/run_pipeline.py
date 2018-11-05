@@ -1,23 +1,27 @@
-import sys
-import os
 import errno
+import os
+import sys
 
 import numpy as np
 
-from blur import draw_box, constant_blur, gradient_blur
-from draw import draw_quote_in_box, draw_signature, draw_credits
-from image_sizing import get_image, get_boundary, get_box_corners
-from scrape_twitter import setup_api, search_keyword, find_image, find_quote
-from screen_tweets import is_website, contains_hashtag, contains_emoji, \
-    is_punctuation, ends_with_punctuation, is_appropriate, check_quote_quality, \
-    screen_image_tweet, screen_quote_tweet
-from text_color import average_color, average_contrast_color, get_all_luminances, \
-    overall_contrast_color, select_region_and_color, check_image_colors
+from blur import constant_blur, draw_box, gradient_blur
+from determine_tweet_content import (attribution_length, attribution_text,
+                                     find_hashtags)
+from draw import draw_credits, draw_quote_in_box, draw_signature
+from image_sizing import get_boundary, get_box_corners, get_image
+from scrape_twitter import find_image, find_quote, search_keyword, setup_api
+from screen_tweets import (check_quote_quality, contains_emoji,
+                           contains_hashtag, ends_with_punctuation,
+                           is_appropriate, is_punctuation, is_website,
+                           screen_image_tweet, screen_quote_tweet)
+from text_color import (average_color, average_contrast_color,
+                        check_image_colors, get_all_luminances,
+                        overall_contrast_color, select_region_and_color)
 from text_filtering import filter_quote
 from text_formatting import fit_text_to_box
-from text_sizing import quote_width, signature_width, credit_width, full_credits_width, \
-    check_quote_width, check_footer_width
-from determine_tweet_content import attribution_text, attribution_length, find_hashtags
+from text_sizing import (check_footer_width, check_quote_width, credit_width,
+                         full_credits_width, quote_width, signature_width)
+
 
 def create_combined_image(api,
                           image_keyword='#sunset',
@@ -52,8 +56,6 @@ def create_combined_image(api,
                                                                min_dimensions=(1440, 1080))
 
     img = get_image(image_filename)
-    img_width, img_height = img.size
-    boundary = get_boundary(img)
 
     print('Selecting text region and color...')
     location, color = select_region_and_color(img)

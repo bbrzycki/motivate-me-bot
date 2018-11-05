@@ -1,19 +1,14 @@
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw
-from PIL import ImageFilter
+import os
+import sys
 
 import numpy as np
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-import sys
-import os
-
-from text_color import average_color, average_contrast_color, get_all_luminances, \
-    overall_contrast_color, select_region_and_color, check_image_colors
-
-from image_sizing import get_image, get_boundary, get_box_corners
-
-from blur import draw_box, constant_blur, gradient_blur
+from blur import constant_blur, draw_box, gradient_blur
+from image_sizing import get_boundary, get_box_corners, get_image
+from text_color import (average_color, average_contrast_color,
+                        check_image_colors, get_all_luminances,
+                        overall_contrast_color, select_region_and_color)
 
 def draw_quote_in_box(img,
                       box_corners,
@@ -27,7 +22,6 @@ def draw_quote_in_box(img,
                       max_char_height=None,
                       draw_box=True):
     draw = ImageDraw.Draw(img)
-    img_width, img_height = img.size
     boundary = get_boundary(img)
     blur_boundary = int(boundary / 8)
 
@@ -55,7 +49,7 @@ def draw_quote_in_box(img,
     gradient_blur(img, background_box, 2 * blur_boundary, n=int(box_height/16))
 
     for i, line in enumerate(all_lines):
-        line_width, line_height = font.getsize(line)
+        line_width = font.getsize(line)[0]
         x_coord = x1 + box_width / 2 - line_width / 2
         if equal_spacing:
             y_coord = y1 + box_height / 2 - text_block_height / 2 + max_char_height * ((i + 1) * spacing * 1.2 - 0.5)
@@ -107,7 +101,7 @@ def draw_credits(img,
                  color=None,
                  min_font_size=14):
     draw = ImageDraw.Draw(img)
-    img_width, img_height = img.size
+    img_height = img.size[1]
     boundary = get_boundary(img)
     sig_size = max(int(boundary / 2), min_font_size * 2)
     cred_size = int(sig_size / 2)

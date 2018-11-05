@@ -23,8 +23,6 @@ def fit_text_to_box(box_corners,
     max_font_size = 0
     spacing = 1
     all_lines = []
-
-    text_block_height = 0
     max_char_height = 0
 
     while True:
@@ -47,7 +45,7 @@ def fit_text_to_box(box_corners,
             if proposed_text_width <= box_width:
                 current_line = proposed_line
             else:
-                word_width, word_height = font.getsize(word)
+                word_width = font.getsize(word)[0]
                 if word_width > box_width:
                     fits_horizontally = False
                     break
@@ -80,7 +78,6 @@ def fit_text_to_box(box_corners,
                 font_size = max_font_size
                 all_lines = all_lines_temp
                 max_char_height = proposed_max_char_height
-                text_block_height = proposed_text_block_height
         else:
             break
 
@@ -101,7 +98,6 @@ def fit_text_to_box(box_corners,
 
         if proposed_text_block_height <= box_height:
             spacing = proposed_spacing
-            text_block_height = proposed_text_block_height
         else:
             break
 
