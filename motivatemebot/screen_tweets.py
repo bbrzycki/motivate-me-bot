@@ -1,15 +1,17 @@
-from text_formatting import fit_text_to_box
-from text_sizing import quote_width, signature_width, credit_width, full_credits_width, \
-    check_quote_width, check_footer_width
-from text_color import average_color, average_contrast_color, get_all_luminances, \
-    overall_contrast_color, select_region_and_color, check_image_colors
-
-import sys
 import os
-
 import string
+import sys
+
 import regex
 from emoji import UNICODE_EMOJI
+
+from text_color import (average_color, average_contrast_color,
+                        check_image_colors, get_all_luminances,
+                        overall_contrast_color, select_region_and_color)
+from text_formatting import fit_text_to_box
+from text_sizing import (check_footer_width, check_quote_width, credit_width,
+                         full_credits_width, quote_width, signature_width)
+
 
 def is_website(text):
     return 'http' in text and '://' in text
@@ -44,10 +46,15 @@ def is_appropriate(name, screen_name, full_text, tweet_type='quote'):
     otherwise good to exclude, such as promotional material)
     '''
     # Exclude a few characters that generally correspond to lower quality quotes
+    # and exclude tweets that contain links
     if tweet_type == 'quote':
         bad_char = '@?$'
         for char in bad_char:
             if char in full_text:
+                return False
+        for word in full_text.split()[:-1]:
+            if is_website(word):
+                print(">>>",full_text)
                 return False
 
     # Built list of words to exclude from text

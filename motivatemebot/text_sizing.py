@@ -1,17 +1,14 @@
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw
-from PIL import ImageFilter
+import os
+import sys
 
 import numpy as np
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-import sys
-import os
-
-from image_sizing import get_image, get_boundary, get_box_corners
+from image_sizing import get_boundary, get_box_corners, get_image
+from text_color import (average_color, average_contrast_color,
+                        check_image_colors, get_all_luminances,
+                        overall_contrast_color, select_region_and_color)
 from text_formatting import fit_text_to_box
-from text_color import average_color, average_contrast_color, get_all_luminances, \
-    overall_contrast_color, select_region_and_color, check_image_colors
 
 def quote_width(img,
                   all_lines=['Hello, world!'],
@@ -21,7 +18,7 @@ def quote_width(img,
     font = ImageFont.truetype(quote_font_file, max(font_size, min_font_size))
     max_width = 0
     for line in all_lines:
-        line_width, line_height = font.getsize(line)
+        line_width = font.getsize(line)[0]
         if line_width > max_width:
             max_width = line_width
     return max_width
@@ -35,7 +32,7 @@ def signature_width(img,
 
     sig = user
     sig_font = ImageFont.truetype(footer_font_file, sig_size)
-    sig_width, sig_height = sig_font.getsize(sig)
+    sig_width = sig_font.getsize(sig)[0]
     return sig_width
 
 def credit_width(img, name, screen_name, footer_font_file='AppleGothic.ttf', min_font_size=14):
@@ -47,11 +44,11 @@ def credit_width(img, name, screen_name, footer_font_file='AppleGothic.ttf', min
 
     # Image Credit
     image_cred = 'Image Credit: %s (@%s)' % (name, screen_name)
-    image_cred_width, image_cred_height = cred_font.getsize(image_cred)
+    image_cred_width = cred_font.getsize(image_cred)[0]
 
     # Quote Credit
     quote_cred = 'Quote Credit: %s (@%s)' % (name, screen_name)
-    quote_cred_width, quote_cred_height = cred_font.getsize(quote_cred)
+    quote_cred_width = cred_font.getsize(quote_cred)[0]
     return max(image_cred_width, quote_cred_width)
 
 def full_credits_width(img,
@@ -69,11 +66,10 @@ def check_quote_width(img, name, screen_name, full_text,
                       quote_font_file='Apple Chancery.ttf',
                       min_font_size=14):
     # Check quote width
-    boundary = get_boundary(img)
-    location, color = select_region_and_color(img)
+    location = select_region_and_color(img)[0]
     box_corners = get_box_corners(img, location=location)
 
-    all_lines, font_size, spacing, max_char_height = fit_text_to_box(box_corners, full_text, quote_font_file=quote_font_file, equal_spacing=True)
+    font_size = fit_text_to_box(box_corners, full_text, quote_font_file=quote_font_file, equal_spacing=True)[1]
     return font_size >= min_font_size
 
 def check_footer_width(img, name, screen_name, footer_font_file='AppleGothic.ttf'):

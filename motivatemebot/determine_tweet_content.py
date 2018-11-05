@@ -1,7 +1,8 @@
-import regex
-import random
-import os
 import datetime
+import os
+import random
+
+import regex
 
 def attribution_text(image_screen_name,
                      image_tweet_id_str,

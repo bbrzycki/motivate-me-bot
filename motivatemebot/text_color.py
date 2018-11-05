@@ -1,14 +1,10 @@
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw
-from PIL import ImageFilter
+import os
+import sys
 
 import numpy as np
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-import sys
-import os
-
-from image_sizing import get_image, get_boundary, get_box_corners
+from image_sizing import get_boundary, get_box_corners, get_image
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)

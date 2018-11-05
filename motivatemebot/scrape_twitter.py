@@ -1,21 +1,24 @@
-import tweepy
 import json
 import os
-import sys
-from pprint import pprint
 import shutil
-import requests
+import sys
 import time
+from pprint import pprint
 
-from text_color import average_color, average_contrast_color, get_all_luminances, \
-    overall_contrast_color, select_region_and_color, check_image_colors
-from screen_tweets import is_website, contains_hashtag, contains_emoji, \
-    is_punctuation, ends_with_punctuation, is_appropriate, check_quote_quality, \
-    screen_image_tweet, screen_quote_tweet
-from image_sizing import get_image, get_boundary, get_box_corners
-from text_sizing import quote_width, signature_width, credit_width, full_credits_width, \
-    check_quote_width, check_footer_width
+import requests
+import tweepy
+
+from image_sizing import get_boundary, get_box_corners, get_image
+from screen_tweets import (check_quote_quality, contains_emoji,
+                           contains_hashtag, ends_with_punctuation,
+                           is_appropriate, is_punctuation, is_website,
+                           screen_image_tweet, screen_quote_tweet)
+from text_color import (average_color, average_contrast_color,
+                        check_image_colors, get_all_luminances,
+                        overall_contrast_color, select_region_and_color)
 from text_filtering import filter_quote
+from text_sizing import (check_footer_width, check_quote_width, credit_width,
+                         full_credits_width, quote_width, signature_width)
 
 def setup_api(consumer_key, consumer_secret, access_token, access_token_secret):
     '''
@@ -122,9 +125,3 @@ def find_quote(api,
         print('Resuming quote search in 60 seconds...')
         time.sleep(60)
     return -1
-
-if __name__ == '__main__':
-    api = setup_api()
-    query = "#nature"
-    print(find_quote(api, query))
-    print(find_media(api, query))
