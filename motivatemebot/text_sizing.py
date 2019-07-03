@@ -10,6 +10,7 @@ from text_color import (average_color, average_contrast_color,
                         overall_contrast_color, select_region_and_color)
 from text_formatting import fit_text_to_box
 
+
 def quote_width(img,
                   all_lines=['Hello, world!'],
                   quote_font_file='Apple Chancery.ttf',
@@ -23,6 +24,7 @@ def quote_width(img,
             max_width = line_width
     return max_width
 
+
 def signature_width(img,
                    user='@MotivateMeBot',
                    footer_font_file='AppleGothic.ttf',
@@ -34,6 +36,7 @@ def signature_width(img,
     sig_font = ImageFont.truetype(footer_font_file, sig_size)
     sig_width = sig_font.getsize(sig)[0]
     return sig_width
+
 
 def credit_width(img, name, screen_name, footer_font_file='AppleGothic.ttf', min_font_size=14):
     boundary = get_boundary(img)
@@ -51,6 +54,7 @@ def credit_width(img, name, screen_name, footer_font_file='AppleGothic.ttf', min
     quote_cred_width = cred_font.getsize(quote_cred)[0]
     return max(image_cred_width, quote_cred_width)
 
+
 def full_credits_width(img,
                  quote_name,
                  quote_screen_name,
@@ -62,6 +66,7 @@ def full_credits_width(img,
     quote_cred_width = credit_width(img, quote_name, quote_screen_name, footer_font_file=footer_font_file, min_font_size=min_font_size)
     return max(image_cred_width, quote_cred_width)
 
+
 def check_quote_width(img, name, screen_name, full_text,
                       quote_font_file='Apple Chancery.ttf',
                       min_font_size=14):
@@ -71,6 +76,7 @@ def check_quote_width(img, name, screen_name, full_text,
 
     font_size = fit_text_to_box(box_corners, full_text, quote_font_file=quote_font_file, equal_spacing=True)[1]
     return font_size >= min_font_size
+
 
 def check_footer_width(img, name, screen_name, footer_font_file='AppleGothic.ttf'):
     boundary = get_boundary(img)

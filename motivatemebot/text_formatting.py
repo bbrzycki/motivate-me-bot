@@ -1,13 +1,6 @@
-from PIL import Image
 from PIL import ImageFont
-from PIL import ImageDraw
-from PIL import ImageFilter
-
-import numpy as np
-
-import sys
-import os
 import regex
+
 
 def fit_text_to_box(box_corners,
                     text,
@@ -82,7 +75,6 @@ def fit_text_to_box(box_corners,
             break
 
     # Have the maximum working height, but there may be only one word in the last line
-
 
     # We know the text fits with spacing = 1
     # Maximized separation from top to bottom, up to a given spacing limit (default: 2)

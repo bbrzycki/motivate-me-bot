@@ -16,10 +16,12 @@ from text_sizing import (check_footer_width, check_quote_width, credit_width,
 def is_website(text):
     return 'http' in text and '://' in text
 
+
 def contains_hashtag(text):
     if text == '':
         return False
     return text[0] == '#'
+
 
 def contains_emoji(text):
     for emoji in UNICODE_EMOJI:
@@ -27,11 +29,13 @@ def contains_emoji(text):
             return True
     return False
 
+
 def is_punctuation(char):
     punctuation = regex.compile(r'[\p{C}|\p{M}|\p{P}|\p{S}|\p{Z}]+', regex.UNICODE)
     if punctuation.match(char) is None:
         return False
     return True
+
 
 def ends_with_punctuation(text):
     # Specifically excluding newline characters
@@ -39,6 +43,7 @@ def ends_with_punctuation(text):
     while text[i] == '\n':
         i -= 1
     return is_punctuation(text[i])
+
 
 def is_appropriate(name, screen_name, full_text, tweet_type='quote'):
     '''
@@ -104,6 +109,7 @@ def is_appropriate(name, screen_name, full_text, tweet_type='quote'):
     #         return False
     return True
 
+
 def check_quote_quality(full_text):
     '''Somehow determine the quality of the resulting quote'''
     # Make sure the length of the quote is something substantial
@@ -111,10 +117,12 @@ def check_quote_quality(full_text):
         return False
     return True
 
+
 def screen_image_tweet(img, name, screen_name, footer_font_file='AppleGothic.ttf'):
     '''Check whether the image is good enough to use'''
     return check_image_colors(img) \
         and check_footer_width(img, name, screen_name, footer_font_file=footer_font_file)
+
 
 def screen_quote_tweet(img,
                        name,

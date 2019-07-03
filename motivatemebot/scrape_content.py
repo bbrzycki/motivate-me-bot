@@ -20,6 +20,7 @@ from text_filtering import filter_quote
 from text_sizing import (check_footer_width, check_quote_width, credit_width,
                          full_credits_width, quote_width, signature_width)
 
+
 def setup_api(consumer_key, consumer_secret, access_token, access_token_secret):
     '''
     Set up api for Twitter interactions using tweepy.
@@ -27,6 +28,7 @@ def setup_api(consumer_key, consumer_secret, access_token, access_token_secret):
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     return tweepy.API(auth)
+
 
 def search_keyword(api,
                    query,
@@ -38,16 +40,17 @@ def search_keyword(api,
     results = api.search(q=query, lang=lang, count=count, tweet_mode='extended')
     return results
 
-def find_image(api,
-               query,
-               footer_font_file='AppleGothic.ttf',
-               output_dir='downloaded/',
-               resolution='large',
-               min_dimensions = (1440, 1080),
-               lang='en',
-               min_follower_count=500,
-               count=100,
-               verbose=True):
+
+def find_twitter_image(api,
+                       query,
+                       footer_font_file='AppleGothic.ttf',
+                       output_dir='downloaded/',
+                       resolution='large',
+                       min_dimensions=(1440, 1080),
+                       lang='en',
+                       min_follower_count=500,
+                       count=100,
+                       verbose=True):
     while True:
         results = search_keyword(api, query, lang=lang, count=count)
         for tweet in results:
@@ -90,6 +93,60 @@ def find_image(api,
         print('Resuming image search in 60 seconds...')
         time.sleep(60)
     return -1
+
+
+def find_unsplash_image(unsplash_access_key,
+                        query,
+                        footer_font_file='AppleGothic.ttf',
+                        output_dir='downloaded/',
+                        resolution='full',
+                        min_dimensions=(1440, 1080),
+                        lang='en',
+                        verbose=True):
+    while True:
+        api_url = 'https://api.unsplash.com'
+        result = requests.get(api_url + '/photos/random/?client_id=%s&query=%s&orientation=%s&count=30' % (unsplash_access_key, query, 'landscape'))
+        for image_info in result.json():
+            image_url = image_info['urls'][resolution]
+            image_id = image_info['id']
+            name = image_info['user']['name']
+            twitter_username = image_info['user']['twitter_username']
+            profile_url = image_info['user']['links']['html']
+            download_location = image_info['links']['download_location']
+            print(image_info['width'], image_info['height'])
+
+            min_w, min_h = min_dimensions
+            if image_info['width'] >= min_w and image_info['height'] >= min_h:
+                screen_name = image_info['user']['username']
+                full_text = ''
+                if is_appropriate(name, screen_name, full_text, tweet_type='image'):
+                    filename = output_dir + image_id + '.jpg'
+
+                    # Avoid reading potentially large images all at once
+                    response = requests.get(image_url, stream=True)
+                    with open(filename, 'wb') as outfile:
+                        shutil.copyfileobj(response.raw, outfile)
+                    del response
+
+                    # Check whether the image is good (for color / tweet content)
+                    img = get_image(filename)
+                    print('Image:', image_id)
+                    if screen_image_tweet(img,
+                                          name,
+                                          screen_name,
+                                          footer_font_file=footer_font_file):
+                        # Image selected! Passed color test for all text
+                        # Send request to download credit endpoint @ Unsplash API
+                        response = requests.get(download_location + '?client_id=%s' % unsplash_access_key)
+                        if response.status_code == 200:
+                            return name, twitter_username, profile_url, image_id, filename
+                        else:
+                            raise requests.exceptions.HTTPError
+        # Wait a bit before searching again
+        print('Resuming image search in 60 seconds...')
+        time.sleep(60)
+    return -1
+
 
 def find_quote(api,
                img,

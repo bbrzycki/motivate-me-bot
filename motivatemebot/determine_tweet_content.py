@@ -4,22 +4,33 @@ import random
 
 import regex
 
+
 def attribution_text(image_screen_name,
-                     image_tweet_id_str,
+                     image_referral_url,
                      quote_screen_name,
-                     quote_tweet_id_str):
-    return 'Image: @%s (https://twitter.com/%s/status/%s) | ' % (image_screen_name, image_screen_name, image_tweet_id_str) \
-        + 'Quote: @%s (https://twitter.com/%s/status/%s)' % (quote_screen_name, quote_screen_name, quote_tweet_id_str)
+                     quote_referral_url,
+                     image_method='unsplash'):
+    if image_method == 'unsplash':
+        via = 'via Unsplash '
+    else:
+        via = ''
+    return ('Image: @%s %s(%s) | ' % (image_screen_name, via, image_referral_url)
+            + 'Quote: @%s (%s)' % (quote_screen_name, quote_referral_url))
+
 
 def attribution_length(image_screen_name, quote_screen_name):
     # Links on Twitter are shortened to 23 characters no matter what,
     # so this is the correct length of the tweet before hashtags are included
+    # Note -- this is hardcoded! Handle with care
     return 8 * 2 + len(image_screen_name) + len(quote_screen_name) + 9 + 2 * 23
+
 
 def find_hashtags(image_keyword, quote_keyword, quote, char_limit=60):
     remaining_char = char_limit
 
     remove = regex.compile(r'[\p{C}|\p{M}|\p{P}|\p{S}|\p{Z}]+', regex.UNICODE)
+    if image_keyword[0] != '#':
+        image_keyword = '#' + image_keyword
     keywords = '%s %s' % (image_keyword, quote_keyword)
     hashtag_list = remove.sub(' ', keywords).split()
     remaining_char -= 3 + len(image_keyword) + len(quote_keyword)

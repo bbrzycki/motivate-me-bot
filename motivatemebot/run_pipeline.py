@@ -1,15 +1,12 @@
 import errno
 import os
-import sys
-
-import numpy as np
 
 from blur import constant_blur, draw_box, gradient_blur
 from determine_tweet_content import (attribution_length, attribution_text,
                                      find_hashtags)
 from draw import draw_credits, draw_quote_in_box, draw_signature
 from image_sizing import get_boundary, get_box_corners, get_image
-from scrape_twitter import find_image, find_quote, search_keyword, setup_api
+from scrape_content import find_twitter_image, find_unsplash_image, find_quote, search_keyword, setup_api
 from screen_tweets import (check_quote_quality, contains_emoji,
                            contains_hashtag, ends_with_punctuation,
                            is_appropriate, is_punctuation, is_website,
@@ -23,7 +20,8 @@ from text_sizing import (check_footer_width, check_quote_width, credit_width,
                          full_credits_width, quote_width, signature_width)
 
 
-def create_combined_image(api,
+def create_combined_image(twitter_api,
+                          image_method='unsplash',
                           image_keyword='#sunset',
                           quote_keyword='#motivation',
                           download_dir='images/',
@@ -48,12 +46,38 @@ def create_combined_image(api,
         if e.errno != errno.EEXIST:
             raise
 
+    # Getting keys
+    try:
+        # Get API keys stored as environmental variables
+        from os import environ
+        UNSPLASH_ACCESS_KEY = environ['UNSPLASH_ACCESS_KEY']
+    except KeyError:
+        # Otherwise, get API keys stored in a hidden script keys.py in this directory
+        import sys
+        sys.path.append('../')
+        from keys import UNSPLASH_ACCESS_KEY
+
     print('Finding image...')
-    image_name, image_screen_name, image_tweet_id_str, image_filename = find_image(api,
-                                                               image_keyword,
-                                                               footer_font_file,
-                                                               output_dir=download_dir,
-                                                               min_dimensions=(1440, 1080))
+    if image_method == 'twitter':
+        image_name, image_screen_name, image_tweet_id_str, image_filename = find_twitter_image(twitter_api,
+                                                                                               image_keyword,
+                                                                                               footer_font_file,
+                                                                                               output_dir=download_dir,
+                                                                                               min_dimensions=(1440, 1080))
+        image_referral_url = 'https://twitter.com/%s/status/%s' % (image_screen_name, image_tweet_id_str)
+    elif image_method == 'unsplash':
+        image_name, image_twitter_username, image_referral_url, image_id, image_filename = find_unsplash_image(UNSPLASH_ACCESS_KEY,
+                                                                                                               image_keyword,
+                                                                                                               footer_font_file,
+                                                                                                               output_dir=download_dir,
+                                                                                                               min_dimensions=(1440, 1080))
+        # If unsplash user has a twitter account linked, use that instead as the screen name
+        if image_twitter_username is not None and image_twitter_username != '':
+            image_screen_name = image_twitter_username
+        else:
+            image_screen_name = image_name
+    else:
+        raise ValueError
 
     img = get_image(image_filename)
 
@@ -62,11 +86,12 @@ def create_combined_image(api,
     box_corners = get_box_corners(img, location=location)
 
     print('Finding quote...')
-    quote_name, quote_screen_name, quote_tweet_id_str, quote = find_quote(api,
-                                                                img,
-                                                                quote_keyword,
-                                                                quote_font_file=quote_font_file,
-                                                                footer_font_file=footer_font_file)
+    quote_name, quote_screen_name, quote_tweet_id_str, quote = find_quote(twitter_api,
+                                                                          img,
+                                                                          quote_keyword,
+                                                                          quote_font_file=quote_font_file,
+                                                                          footer_font_file=footer_font_file)
+    quote_referral_url = 'https://twitter.com/%s/status/%s' % (quote_screen_name, quote_tweet_id_str)
 
     print('Fitting quote to image...')
     all_lines, font_size, spacing, max_char_height = fit_text_to_box(box_corners,
@@ -85,7 +110,7 @@ def create_combined_image(api,
                       spacing=spacing,
                       equal_spacing=True,
                       max_char_height=max_char_height,
-                      draw_box=False)
+                      box_visible=False)
 
     print('Writing signature to image...')
     draw_signature(img, footer_font_file=footer_font_file)
@@ -100,8 +125,9 @@ def create_combined_image(api,
 
     if follow_credits:
         print('Following image and quote tweeters...')
-        api.create_friendship(screen_name=image_screen_name)
-        api.create_friendship(screen_name=quote_screen_name)
+        if image_method == 'twitter':
+            twitter_api.create_friendship(screen_name=image_screen_name)
+        twitter_api.create_friendship(screen_name=quote_screen_name)
     else:
         print('Not following image and quote tweeters...')
 
@@ -112,32 +138,38 @@ def create_combined_image(api,
     if show:
         img.show()
 
+    print('Getting attribution section of tweet')
+    attribution = attribution_text(image_screen_name,
+                                   image_referral_url,
+                                   quote_screen_name,
+                                   quote_referral_url)
+
     print('Determining hashtags...')
-    char_limit = 279 - attribution_length(image_screen_name, quote_screen_name)
+    char_limit = (279 - len(attribution) + len(image_referral_url)
+                  + len(quote_screen_name) - 2 * 23)
     hashtag_str = find_hashtags(image_keyword,
                                 quote_keyword,
                                 quote,
                                 char_limit=char_limit)
 
-    return image_screen_name, image_tweet_id_str, \
-        quote_screen_name, quote_tweet_id_str, hashtag_str, new_image_filename
+    return image_screen_name, image_referral_url, \
+        quote_screen_name, quote_referral_url, attribution, hashtag_str, \
+        new_image_filename
 
-def upload_image(api,
+
+def upload_image(twitter_api,
                  image_screen_name,
-                 image_tweet_id_str,
+                 image_referral_url,
                  quote_screen_name,
-                 quote_tweet_id_str,
+                 quote_referral_url,
+                 attribution,
                  hashtag_str,
                  new_image_filename,
                  upload=True):
-    tweet_text = '%s %s' % (attribution_text(image_screen_name,
-                                             image_tweet_id_str,
-                                             quote_screen_name,
-                                             quote_tweet_id_str),
-                            hashtag_str)
+    tweet_text = '%s %s' % (attribution, hashtag_str)
     print('\nStatus:\n\n%s\n' % tweet_text)
     if upload:
-        api.update_with_media(new_image_filename, status=tweet_text)
+        twitter_api.update_with_media(new_image_filename, status=tweet_text)
         print('~ Uploaded to Twitter! ~')
     else:
         print('~ Not uploaded to Twitter ~')

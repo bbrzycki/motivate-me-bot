@@ -6,6 +6,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 from image_sizing import get_boundary, get_box_corners, get_image
 
+
 def draw_box(img, box, line_width=1):
     '''Draw a rectangular box on the image'''
     x1, y1, x2, y2 = box
@@ -23,11 +24,13 @@ def draw_box(img, box, line_width=1):
     draw.line((x1 + box_width, y1 + box_height, x1, y1 + box_height), width=line_width)
     draw.line((x1 + box_width, y1 + box_height + line_width / 2 - 1, x1 + box_width, y1 - line_width / 2 + 1), width=line_width)
 
+
 def constant_blur(img, background_box, blur_radius):
     '''Blur a region of the image with a constant blurring radius'''
     region = img.crop(background_box)
     region = region.filter(ImageFilter.GaussianBlur(radius=blur_radius))
     img.paste(region, background_box)
+
 
 def gradient_blur(img, background_box, max_blur_radius, n=0):
     '''

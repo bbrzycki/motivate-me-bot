@@ -1,12 +1,15 @@
 import sys
 from PIL import Image
 
+
 def get_image(image_path):
     return Image.open(image_path)
 
-def get_boundary(img, scaling=16):
+
+def get_boundary(img, scaling=12):
     img_width, img_height = img.size
     return min(int(img_width / scaling), int(img_height / scaling))
+
 
 def get_box_corners(img, location='top'):
     img_width, img_height = img.size

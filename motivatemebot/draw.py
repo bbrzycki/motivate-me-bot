@@ -10,6 +10,7 @@ from text_color import (average_color, average_contrast_color,
                         check_image_colors, get_all_luminances,
                         overall_contrast_color, select_region_and_color)
 
+
 def draw_quote_in_box(img,
                       box_corners,
                       all_lines=['Hello, world!'],
@@ -20,7 +21,7 @@ def draw_quote_in_box(img,
                       spacing=1,
                       equal_spacing=True,
                       max_char_height=None,
-                      draw_box=True):
+                      box_visible=True):
     draw = ImageDraw.Draw(img)
     boundary = get_boundary(img)
     blur_boundary = int(boundary / 8)
@@ -46,7 +47,7 @@ def draw_quote_in_box(img,
     if color is None:
         color = overall_contrast_color(img, background_box)
 
-    gradient_blur(img, background_box, 2 * blur_boundary, n=int(box_height/16))
+    gradient_blur(img, background_box, blur_boundary, n=int(box_height/16))
 
     for i, line in enumerate(all_lines):
         line_width = font.getsize(line)[0]
@@ -56,12 +57,13 @@ def draw_quote_in_box(img,
         else:
             y_coord = y1 + box_height / 2 - text_block_height / 2 + max_char_height * i * spacing * 1.2
         draw.text((x_coord, y_coord),
-                   line,
-                   color,
-                   font=font)
+                  line,
+                  color,
+                  font=font)
 
-    if draw_box:
+    if box_visible:
         draw_box(img, background_box)
+
 
 def draw_signature(img,
                    user='@MotivateMeBot',
@@ -71,26 +73,30 @@ def draw_signature(img,
     draw = ImageDraw.Draw(img)
     img_width, img_height = img.size
     boundary = get_boundary(img)
-    sig_size = max(int(boundary / 2), min_font_size * 2)
-    blur_boundary = int(sig_size / 2)
+    sig_size = int(3 / 4 * max(int(boundary / 2), min_font_size * 2))
+    blur_boundary = int(sig_size * 3 / 8)
 
     # MotivateMeBot sig
-    sig = user
+    sig = 'Remixed by ' + user
     sig_font = ImageFont.truetype(footer_font_file, sig_size)
     sig_width, sig_height = sig_font.getsize(sig)
 
-    background_box = (img_width - blur_boundary - sig_width - sig_size, img_height - blur_boundary - sig_height - sig_size,
-                      img_width + blur_boundary - sig_size, img_height + blur_boundary - sig_size)
+    background_box = (img_width - blur_boundary - sig_width - sig_size,
+                      img_height - blur_boundary - sig_height - sig_size,
+                      img_width + blur_boundary - sig_size,
+                      img_height + blur_boundary - sig_size)
 
     if color is None:
         color = overall_contrast_color(img, background_box)
 
-    gradient_blur(img, background_box, blur_boundary / 2, n=int(sig_height/4))
+    gradient_blur(img, background_box, blur_boundary / 4, n=int(sig_height/4))
 
-    draw.text((img_width - sig_width - sig_size, img_height - sig_height - sig_size),
-               sig,
-               color,
-               font=sig_font)
+    draw.text((img_width - sig_width - sig_size,
+               img_height - sig_height - sig_size),
+              sig,
+              color,
+              font=sig_font)
+
 
 def draw_credits(img,
                  quote_name,
@@ -117,20 +123,24 @@ def draw_credits(img,
     quote_cred = 'Quote Credit: %s (@%s)' % (quote_name, quote_screen_name)
     quote_cred_width, quote_cred_height = cred_font.getsize(quote_cred)
 
-    background_box = (sig_size - blur_boundary, img_height - blur_boundary - image_cred_height - quote_cred_height - sig_size,
-                         sig_size + blur_boundary + max(image_cred_width, quote_cred_width), img_height + blur_boundary - sig_size)
+    background_box = (sig_size - blur_boundary,
+                      img_height - blur_boundary - image_cred_height - quote_cred_height - sig_size,
+                      sig_size + blur_boundary + max(image_cred_width, quote_cred_width),
+                      img_height + blur_boundary - sig_size)
 
     if color is None:
         color = overall_contrast_color(img, background_box)
 
     gradient_blur(img, background_box, blur_boundary / 2, n=int((image_cred_height+quote_cred_height)/4))
 
-    draw.text((sig_size, img_height - image_cred_height - sig_size),
-                image_cred,
-                color,
-                font=cred_font)
+    draw.text((sig_size,
+               img_height - image_cred_height - sig_size),
+              image_cred,
+              color,
+              font=cred_font)
 
-    draw.text((sig_size, img_height - image_cred_height * 1.2 - quote_cred_height - sig_size),
-               quote_cred,
-               color,
-               font=cred_font)
+    draw.text((sig_size,
+               img_height - image_cred_height * 1.2 - quote_cred_height - sig_size),
+              quote_cred,
+              color,
+              font=cred_font)
