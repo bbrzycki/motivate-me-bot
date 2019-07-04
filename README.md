@@ -1,7 +1,7 @@
 # motivate-me-bot [![Build Status](https://travis-ci.org/bbrzycki/motivate-me-bot.svg?branch=master)](https://travis-ci.org/bbrzycki/motivate-me-bot) [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
 ### @MotivateMeBot is a Twitter bot that makes motivational pictures by combining pictures with tweets!
 
-@MotivateMeBot is currently hosted on Heroku, running regularly using a scheduler. The bot selects images from [Unsplash](https://unsplash.com/?utm_source=MotivateMeBot&utm_medium=referral)'s excellent collection of high quality, royalty-free photos, using their API service. And of course, it uses the Twitter API to find tweets and post new remixed images.
+@MotivateMeBot is currently hosted on Heroku, running regularly using a scheduler. The bot selects images from [Unsplash](https://unsplash.com/?utm_source=MotivateMeBot&utm_medium=referral)'s excellent collection of high quality, royalty-free photos, via their API service. And of course, it uses the Twitter API to find tweets and post new remixed images.
 
 To select an image, the bot first analyzes a couple positions for the quote (top and middle of image) and determines if the pixels at either position has a good distribution of [relative luminance](https://en.wikipedia.org/wiki/Relative_luminance). The bot may have to try multiple images before it selects one that passes the thresholds defined in the script.
 
