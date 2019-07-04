@@ -17,4 +17,7 @@ To run on your local machine, you'll need a Twitter Developer account and place 
 
 ---
 
-A potential future direction of this project is an app that lets you combine your own text with any image of your choosing!
+Credits for Twitter picture backgrounds (via [Unsplash](https://unsplash.com/?utm_source=MotivateMeBot&utm_medium=referral)):
+
+* Profile picture: [John Rodenn Castillo](https://unsplash.com/photos/eluzJSfkNCk?utm_source=MotivateMeBot&utm_medium=referral)
+* Cover photo: [Fezbot2000](https://unsplash.com/photos/wxGwllldlIQ?utm_source=MotivateMeBot&utm_medium=referral)
