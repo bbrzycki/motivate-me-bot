@@ -28,8 +28,8 @@ def main():
     quote_keyword = '#motivation #inspiration'
     image_keyword = 'nature'
 
-    quote_font_file = "/app/fonts/AppleChancery.ttf"
-    footer_font_file = "/app/fonts/AppleGothic.ttf"
+    quote_font_file = "../fonts/AppleChancery.ttf"
+    footer_font_file = "../fonts/AppleGothic.ttf"
 
     image_screen_name, image_referral_url, \
         quote_screen_name, quote_referral_url, attribution, \
