@@ -1,5 +1,6 @@
 import errno
 import os
+import tweepy
 
 from blur import constant_blur, draw_box, gradient_blur
 from determine_tweet_content import (attribution_length, attribution_text,
@@ -128,12 +129,11 @@ def create_combined_image(twitter_api,
 
     print('Finished creating image!')
     new_image_filename = new_dir + os.path.split(image_filename)[1]
-    img.save(new_image_filename)
 
     if show:
         img.show()
 
-    print('Getting attribution section of tweet')
+    print('Getting attribution section of tweet...')
     attribution = attribution_text(image_screen_name,
                                    image_referral_url,
                                    quote_screen_name,
@@ -147,24 +147,33 @@ def create_combined_image(twitter_api,
                                 quote,
                                 char_limit=char_limit)
 
-    return image_screen_name, image_referral_url, \
-        quote_screen_name, quote_referral_url, attribution, hashtag_str, \
-        new_image_filename
+    return img, new_image_filename, image_screen_name, image_referral_url, \
+        quote_screen_name, quote_referral_url, attribution, hashtag_str
 
 
 def upload_image(twitter_api,
+                 img,
+                 new_image_filename,
                  image_screen_name,
                  image_referral_url,
                  quote_screen_name,
                  quote_referral_url,
                  attribution,
                  hashtag_str,
-                 new_image_filename,
                  upload=True):
     tweet_text = '%s %s' % (attribution, hashtag_str)
     print('\nStatus:\n\n%s\n' % tweet_text)
     if upload:
-        twitter_api.update_with_media(new_image_filename, status=tweet_text)
+        quality = 90
+        while True:
+            print('Trying quality: %d%%' % quality)
+            img.save(new_image_filename, quality=quality)
+            try:
+                twitter_api.update_with_media(new_image_filename, status=tweet_text)
+                break
+            except tweepy.error.TweepError:
+                quality -= 5
+
         print('~ Uploaded to Twitter! ~')
     else:
         print('~ Not uploaded to Twitter ~')

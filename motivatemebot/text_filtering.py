@@ -51,53 +51,14 @@ def filter_quote(full_text, autocorrect=False, verbose=False):
     if verbose:
         print(word_list)
 
-    #
-    # # Track number of ending hashtags; observed that there are quite a few
-    # # tweets that have punctuative erroneously at the end
-    # words_betw_end_punc = []
-    # hash_betw_end_punc = []
-    # num_words = 0
-    # num_hashtags = 0
-    # punc_indices = [-1]
-    # for i, word in enumerate(word_list):
-    #     if word[-1] in ['.', '!', '?']:
-    #         punc_indices.append(i)
-    #         words_betw_end_punc.append(num_words)
-    #         hash_betw_end_punc.append(num_hashtags)
-    #         num_words = 0
-    #         num_hashtags = 0
-    #     else:
-    #         num_words += 1
-    #         if contains_hashtag(word):
-    #             num_hashtags += 1
-    # words_betw_end_punc.append(num_words)
-    # hash_betw_end_punc.append(num_hashtags)
-    # punc_indices.append(len(word_list) - 1)
-    # # Go from reverse to take elements off of the end. The second a phrase
-    # # separated by ending punctuation *isn't* completely filled with
-    # # hashtags, then exit; perhaps the actual tweet is doing that by design.
-    # if verbose:
-    #     print(word_list)
-    # for i in range(1, len(punc_indices))[::-1]:
-    #     if hash_betw_end_punc[i - 1] == words_betw_end_punc[i - 1]:
-    #         del word_list[punc_indices[i - 1] + 1:punc_indices[i] + 1]
-    #     else:
-    #         break
-    # hashtag_tail = True
-    # for i in range(max(-5, -len(word_list)), 0):
-    #     if not contains_hashtag(word_list[i]):
-    #         hashtag_tail = False
-    # if hashtag_tail:
-    #     while (contains_hashtag(word_list[-1])
-    #            and not ends_with_punctuation(word_list[-1])
-    #            and not word_list[-1][0].isupper()
-    #            and not word_list[-1][0].isdigit()):
-    #         del word_list[-1]
-
     # First pass nuke for removing trailing hashtags
-    while contains_hashtag(word_list[-1]) and not ends_with_punctuation(word_list[-1]):
+    while (len(word_list) != 0
+           and contains_hashtag(word_list[-1])
+           and not ends_with_punctuation(word_list[-1])):
         del word_list[-1]
 
+    # Delete trailing hashtags. Bot requires a certain length of text,
+    # so starting checks at the second to last index is ok.
     i = len(word_list) - 1
     j = i - 1
     while j > 0 and contains_hashtag(word_list[j]):
@@ -107,7 +68,8 @@ def filter_quote(full_text, autocorrect=False, verbose=False):
             j = i - 1
         else:
             j -= 1
-    if (contains_hashtag(word_list[j + 1])
+    if (j >= 0
+        and contains_hashtag(word_list[j + 1])
         and (ends_with_punctuation(word_list[j])
              or word_list[j][0].isupper()
              or word_list[j][0].isdigit())):

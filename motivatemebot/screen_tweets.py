@@ -125,7 +125,7 @@ def is_appropriate(name, screen_name, full_text, tweet_type='quote'):
 def check_quote_quality(full_text):
     '''Somehow determine the quality of the resulting quote'''
     # Make sure the length of the quote is something substantial
-    if len(full_text.split()) < 6:
+    if len(full_text.split()) < 5:
         return False
     return True
 

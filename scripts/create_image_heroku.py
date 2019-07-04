@@ -6,6 +6,7 @@ This script is run on Heroku from the home /app/ directory.
 from context import motivatemebot as mmb
 import sys
 
+
 def main():
     try:
         # Get API keys stored as environmental variables
@@ -31,28 +32,29 @@ def main():
     quote_font_file = "/app/fonts/AppleChancery.ttf"
     footer_font_file = "/app/fonts/AppleGothic.ttf"
 
-    image_screen_name, image_referral_url, \
+    img, new_image_filename, image_screen_name, image_referral_url, \
         quote_screen_name, quote_referral_url, attribution, \
-        hashtag_str, new_image_filename = mmb.create_combined_image(twitter_api,
-                                                                    'unsplash',
-                                                                    image_keyword,
-                                                                    quote_keyword,
-                                                                    download_dir,
-                                                                    new_dir,
-                                                                    quote_font_file=quote_font_file,
-                                                                    footer_font_file=footer_font_file,
-                                                                    follow_credits=False,
-                                                                    show=False)
+        hashtag_str = mmb.create_combined_image(twitter_api,
+                                                'unsplash',
+                                                image_keyword,
+                                                quote_keyword,
+                                                download_dir,
+                                                new_dir,
+                                                quote_font_file=quote_font_file,
+                                                footer_font_file=footer_font_file,
+                                                follow_credits=False,
+                                                show=False)
 
     print('\nImage saved at %s.' % new_image_filename)
     mmb.upload_image(twitter_api,
+                     img,
+                     new_image_filename,
                      image_screen_name,
                      image_referral_url,
                      quote_screen_name,
                      quote_referral_url,
                      attribution,
                      hashtag_str,
-                     new_image_filename,
                      upload=True)
 
     return new_image_filename
