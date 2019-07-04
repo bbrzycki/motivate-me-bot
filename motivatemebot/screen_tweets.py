@@ -86,10 +86,22 @@ def is_appropriate(name, screen_name, full_text, tweet_type='quote'):
     # Compare all excluded words / phrases to all relevant text
     for word in single_exclude_words:
         stripped = word.strip().lower()
-        # Check word (separated by spaces), force lowercase to prevent case issues
+        # Check word, force lowercase to prevent case issues
+        # We separate this by spaces to avoid flagging when inappropriate words
+        # are located within perfectly fine words (i.e. ass -> grass)
         compare_string = ' ' + stripped + ' '
         if stripped != '' and compare_string in all_text:
             return False
+
+        # Catch if there are numbers larger than digits
+        try:
+            x = float(stripped)
+            if x > 10:
+                return False
+        except ValueError:
+            # No numbers, cool!
+            pass
+
     if tweet_type == 'quote':
         match_count = 0
         for word in multiple_exclude_words:

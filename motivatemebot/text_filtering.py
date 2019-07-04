@@ -100,19 +100,17 @@ def filter_quote(full_text, autocorrect=False, verbose=False):
 
     i = len(word_list) - 1
     j = i - 1
-    while contains_hashtag(word_list[j]):
+    while j > 0 and contains_hashtag(word_list[j]):
         if ends_with_punctuation(word_list[j]):
             del word_list[j + 1:i + 1]
-            # Because I'm restricting tweets to have a certain number
-            # of non-hashtag words, I won't run into edge conditions..
-            # And if so, then I want that error.
             i = j
             j = i - 1
         else:
             j -= 1
-    if (ends_with_punctuation(word_list[j])
-            or word_list[j][0].isupper()
-            or word_list[j][0].isdigit()):
+    if (contains_hashtag(word_list[j + 1])
+        and (ends_with_punctuation(word_list[j])
+             or word_list[j][0].isupper()
+             or word_list[j][0].isdigit())):
         del word_list[j + 1:i + 1]
 
     if verbose:

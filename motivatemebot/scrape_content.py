@@ -70,6 +70,7 @@ def find_twitter_image(api,
                     screen_name = tweet_dict['user']['screen_name']
                     tweet_id_str = tweet_dict['id_str']
                     full_text = tweet_dict['full_text']
+                    referral_url = 'https://twitter.com/%s/status/%s' % (screen_name, tweet_id_str)
                     if is_appropriate(name, screen_name, full_text, tweet_type='image'):
                         url = media_dict['media_url_https'] + ':' + resolution
 
@@ -88,7 +89,7 @@ def find_twitter_image(api,
                                               name,
                                               screen_name,
                                               footer_font_file=footer_font_file):
-                            return name, screen_name, tweet_id_str, filename
+                            return name, screen_name, referral_url, filename
         # Wait a bit before searching again
         print('Resuming image search in 60 seconds...')
         time.sleep(60)
@@ -111,9 +112,16 @@ def find_unsplash_image(unsplash_access_key,
             image_id = image_info['id']
             name = image_info['user']['name']
             twitter_username = image_info['user']['twitter_username']
+            html_image_url = image_info['links']['html'] + '?utm_source=MotivateMeBot&utm_medium=referral'
             profile_url = image_info['user']['links']['html']
             download_location = image_info['links']['download_location']
             print(image_info['width'], image_info['height'])
+
+            # If unsplash user has a twitter account linked, use that instead as the screen name
+            if twitter_username is not None and twitter_username != '':
+                screen_name = twitter_username
+            else:
+                screen_name = name
 
             min_w, min_h = min_dimensions
             if image_info['width'] >= min_w and image_info['height'] >= min_h:
@@ -139,7 +147,7 @@ def find_unsplash_image(unsplash_access_key,
                         # Send request to download credit endpoint @ Unsplash API
                         response = requests.get(download_location + '?client_id=%s' % unsplash_access_key)
                         if response.status_code == 200:
-                            return name, twitter_username, profile_url, image_id, filename
+                            return name, screen_name, html_image_url, filename
                         else:
                             raise requests.exceptions.HTTPError
         # Wait a bit before searching again

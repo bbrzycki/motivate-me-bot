@@ -56,7 +56,7 @@ def main():
                      attribution,
                      hashtag_str,
                      new_image_filename,
-                     upload=True)
+                     upload=False)
 
     return new_image_filename
 

@@ -73,18 +73,19 @@ def draw_signature(img,
     draw = ImageDraw.Draw(img)
     img_width, img_height = img.size
     boundary = get_boundary(img)
-    sig_size = int(3 / 4 * max(int(boundary / 2), min_font_size * 2))
-    blur_boundary = int(sig_size * 3 / 8)
+    sig_size = int(max(int(boundary / 2), min_font_size * 2))
+    blur_boundary = int(sig_size / 4)
 
     # MotivateMeBot sig
     sig = 'Remixed by ' + user
-    sig_font = ImageFont.truetype(footer_font_file, sig_size)
+    sig_font = ImageFont.truetype(footer_font_file, sig_size * 3 // 4)
     sig_width, sig_height = sig_font.getsize(sig)
 
     background_box = (img_width - blur_boundary - sig_width - sig_size,
                       img_height - blur_boundary - sig_height - sig_size,
                       img_width + blur_boundary - sig_size,
                       img_height + blur_boundary - sig_size)
+    print('signature', background_box)
 
     if color is None:
         color = overall_contrast_color(img, background_box)
@@ -127,6 +128,7 @@ def draw_credits(img,
                       img_height - blur_boundary - image_cred_height - quote_cred_height - sig_size,
                       sig_size + blur_boundary + max(image_cred_width, quote_cred_width),
                       img_height + blur_boundary - sig_size)
+    print('credits', background_box)
 
     if color is None:
         color = overall_contrast_color(img, background_box)

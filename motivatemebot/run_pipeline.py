@@ -59,23 +59,18 @@ def create_combined_image(twitter_api,
 
     print('Finding image...')
     if image_method == 'twitter':
-        image_name, image_screen_name, image_tweet_id_str, image_filename = find_twitter_image(twitter_api,
+        image_name, image_screen_name, image_referral_url, image_filename = find_twitter_image(twitter_api,
                                                                                                image_keyword,
                                                                                                footer_font_file,
                                                                                                output_dir=download_dir,
                                                                                                min_dimensions=(1440, 1080))
-        image_referral_url = 'https://twitter.com/%s/status/%s' % (image_screen_name, image_tweet_id_str)
     elif image_method == 'unsplash':
-        image_name, image_twitter_username, image_referral_url, image_id, image_filename = find_unsplash_image(UNSPLASH_ACCESS_KEY,
+        image_name, image_screen_name, image_referral_url, image_filename = find_unsplash_image(UNSPLASH_ACCESS_KEY,
                                                                                                                image_keyword,
                                                                                                                footer_font_file,
                                                                                                                output_dir=download_dir,
                                                                                                                min_dimensions=(1440, 1080))
-        # If unsplash user has a twitter account linked, use that instead as the screen name
-        if image_twitter_username is not None and image_twitter_username != '':
-            image_screen_name = image_twitter_username
-        else:
-            image_screen_name = image_name
+
     else:
         raise ValueError
 
