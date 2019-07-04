@@ -47,7 +47,7 @@ def draw_quote_in_box(img,
     if color is None:
         color = overall_contrast_color(img, background_box)
 
-    gradient_blur(img, background_box, blur_boundary, n=int(box_height/16))
+    gradient_blur(img, background_box, blur_boundary / 2, n=int(box_height/16))
 
     for i, line in enumerate(all_lines):
         line_width = font.getsize(line)[0]

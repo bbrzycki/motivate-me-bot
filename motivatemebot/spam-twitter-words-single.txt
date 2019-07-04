@@ -25,6 +25,7 @@ like if
 log in
 login
 merchandise
+Miss
 Mr
 Mr.
 Mrs
@@ -46,6 +47,7 @@ retweeting
 RPing
 rt
 RTing
+on sale now
 sign up
 snag
 snapchat

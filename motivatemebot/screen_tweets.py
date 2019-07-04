@@ -24,8 +24,8 @@ def contains_hashtag(text):
 
 
 def contains_emoji(text):
-    for emoji in UNICODE_EMOJI:
-        if emoji in text:
+    for char in text:
+        if char in UNICODE_EMOJI:
             return True
     return False
 
@@ -53,13 +53,19 @@ def is_appropriate(name, screen_name, full_text, tweet_type='quote'):
     # Exclude a few characters that generally correspond to lower quality quotes
     # and exclude tweets that contain links
     if tweet_type == 'quote':
-        bad_char = '@?$'
-        for char in bad_char:
-            if char in full_text:
-                return False
+        # Last 'word' is a trailing link
         for word in full_text.split()[:-1]:
+            bad_punc = ['@', '?', '$', '...']
+            for punc in bad_punc:
+                if punc in full_text:
+                    return False
             if is_website(word):
-                print(">>>",full_text)
+                print(">>>", full_text)
+                return False
+            # Force characters to be ascii
+            try:
+                word.encode('ascii')
+            except UnicodeEncodeError:
                 return False
 
     # Built list of words to exclude from text

@@ -16,7 +16,7 @@ from screen_tweets import (check_quote_quality, contains_emoji,
 from text_color import (average_color, average_contrast_color,
                         check_image_colors, get_all_luminances,
                         overall_contrast_color, select_region_and_color)
-from text_filtering import filter_quote
+from text_filtering import filter_quote, filter_name
 from text_sizing import (check_footer_width, check_quote_width, credit_width,
                          full_credits_width, quote_width, signature_width)
 
@@ -147,6 +147,7 @@ def find_unsplash_image(unsplash_access_key,
                         # Send request to download credit endpoint @ Unsplash API
                         response = requests.get(download_location + '?client_id=%s' % unsplash_access_key)
                         if response.status_code == 200:
+                            name = filter_name(name, verbose=True)
                             return name, screen_name, html_image_url, filename
                         else:
                             raise requests.exceptions.HTTPError
@@ -177,6 +178,7 @@ def find_quote(api,
                 screen_name = tweet_dict['user']['screen_name']
                 tweet_id_str = tweet_dict['id_str']
                 full_text = tweet_dict['full_text']
+
                 if is_appropriate(name, screen_name, full_text, tweet_type='quote'):
                     filtered_text = filter_quote(full_text, verbose=verbose)
                     if screen_quote_tweet(img,
@@ -185,6 +187,7 @@ def find_quote(api,
                                           filtered_text,
                                           quote_font_file=quote_font_file,
                                           footer_font_file=footer_font_file):
+                        name = filter_name(name, verbose=True)
                         return name, screen_name, tweet_id_str, filtered_text
         # Wait a bit before searching again
         print('Resuming quote search in 60 seconds...')

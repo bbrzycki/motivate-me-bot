@@ -1,6 +1,7 @@
 keys.py
 */keys.py
-images/
+# images/
+scripts/*images/
 new_images/
 
 # Byte-compiled / optimized / DLL files

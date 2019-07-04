@@ -163,8 +163,9 @@ def upload_image(twitter_api,
                  upload=True):
     tweet_text = '%s %s' % (attribution, hashtag_str)
     print('\nStatus:\n\n%s\n' % tweet_text)
+
+    quality = 90
     if upload:
-        quality = 90
         while True:
             print('Trying quality: %d%%' % quality)
             img.save(new_image_filename, quality=quality)
@@ -176,4 +177,5 @@ def upload_image(twitter_api,
 
         print('~ Uploaded to Twitter! ~')
     else:
+        img.save(new_image_filename, quality=quality)
         print('~ Not uploaded to Twitter ~')

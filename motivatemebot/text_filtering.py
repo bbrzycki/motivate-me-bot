@@ -3,8 +3,12 @@ import os
 import sys
 
 import regex
+from emoji import UNICODE_EMOJI
+
 from autocorrect import spell
 import ftfy
+from unidecode import unidecode
+
 
 from screen_tweets import (check_quote_quality, contains_emoji,
                            contains_hashtag, ends_with_punctuation,
@@ -86,6 +90,12 @@ def filter_quote(full_text, autocorrect=False, verbose=False):
             except AttributeError:
                 pass
 
+    # Removing trailing periods with newlines.. this is more common than
+    # I would expect
+    while (len(word_list) != 0
+           and word_list[-1] == '.\n'):
+        del word_list[-1]
+
     # If a new line does *not* have punctuation, then add it,
     # otherwise don't add anything. Match using regex.
     for i in range(len(word_list)):
@@ -110,8 +120,40 @@ def filter_quote(full_text, autocorrect=False, verbose=False):
             word_list[i] = word_list[i] + '.'
     if verbose:
         print(word_list)
+
+    # Guarantee punctuation if there is an attribution to the quote
+    for i, word in enumerate(word_list):
+        if word in ['-', '~', '--', '~~'] and i >= len(word_list) - 4:
+            if not ends_with_punctuation(word_list[i - 1]):
+                word_list[i - 1] += '.'
+
     filtered = ' '.join(word_list)
     if verbose:
         print(filtered)
         print('-'*20)
     return filtered
+
+
+def filter_name(name, verbose=False):
+    if verbose:
+        print(name)
+    name = html.unescape(name).replace('\xa0', ' ').replace('#', ' #')
+    name = ftfy.fix_text(name)
+
+    if verbose:
+        print(name)
+
+    # Remove emojis
+    no_emoji = []
+    for char in name:
+        if char not in UNICODE_EMOJI:
+            no_emoji.append(char)
+    name = ''.join(no_emoji)
+
+    # Convert to closest ascii characters
+    name = unidecode(name)
+
+    if verbose:
+        print(name)
+
+    return name.strip()

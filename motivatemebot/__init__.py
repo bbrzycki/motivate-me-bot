@@ -9,7 +9,7 @@ from scrape_content import find_twitter_image, find_unsplash_image, find_quote, 
 from screen_tweets import is_website, contains_hashtag, contains_emoji, \
     is_punctuation, ends_with_punctuation, is_appropriate, check_quote_quality, \
     screen_image_tweet, screen_quote_tweet
-from text_filtering import filter_quote
+from text_filtering import filter_quote, filter_name
 from text_formatting import fit_text_to_box
 from text_sizing import quote_width, signature_width, credit_width, full_credits_width, \
     check_quote_width, check_footer_width
