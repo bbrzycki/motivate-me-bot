@@ -10,3 +10,4 @@ DateTime==4.3
 emoji==0.5.1
 pytest==3.9.2
 ftfy==5.5.1
+Unidecode==1.1.1
