@@ -171,11 +171,14 @@ def upload_image(twitter_api,
             img.save(new_image_filename, quality=quality)
             try:
                 twitter_api.update_with_media(new_image_filename, status=tweet_text)
+                print('~ Uploaded to Twitter! ~')
                 break
             except tweepy.error.TweepError:
                 quality -= 5
+                if quality < 60:
+                    print('~ Failed to upload to Twitter! ~')
+                    break
 
-        print('~ Uploaded to Twitter! ~')
     else:
         img.save(new_image_filename, quality=quality)
         print('~ Not uploaded to Twitter ~')
