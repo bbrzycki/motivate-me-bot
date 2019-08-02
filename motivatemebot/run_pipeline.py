@@ -166,19 +166,24 @@ def upload_image(twitter_api,
 
     quality = 90
     if upload:
-        while True:
+        file_too_big = True
+        while file_too_big and quality >= 60:
             print('Trying quality: %d%%' % quality)
             img.save(new_image_filename, quality=quality)
-            try:
-                twitter_api.update_with_media(new_image_filename, status=tweet_text)
-                print('~ Uploaded to Twitter! ~')
-                return 0
-            except tweepy.error.TweepError:
+            # Check that file is under 5 MB limit
+            if os.path.getsize(new_image_filename) < 5e6:
+                file_too_big = False
+            else:
+                os.remove(new_image_filename)
                 quality -= 5
-                if quality < 60:
-                    print('~ Failed to upload to Twitter! ~')
-                    return -1
-
+        try:
+            twitter_api.update_with_media(new_image_filename,
+                                          status=tweet_text)
+            print('~ Uploaded to Twitter! ~')
+            return 0
+        except tweepy.error.TweepError:
+            print('~ Failed to upload to Twitter! ~')
+            return -1
     else:
         img.save(new_image_filename, quality=quality)
         print('~ Not uploaded to Twitter ~')
