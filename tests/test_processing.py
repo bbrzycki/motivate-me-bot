@@ -1,7 +1,7 @@
 from context import motivatemebot as mmb
 
 
-def test_filtering():
+def test_processing():
     inputs = ['this is a test tweet',
               'a multiline test\n on whether it correctly adds punctuation\nThere should be a period before this',
               'Get rid of hashtags! #one #two #three',
@@ -17,4 +17,4 @@ def test_filtering():
                'But not all of them!',
                'But it should remove enough of them! - Wise Person']
     for input, output in zip(inputs, outputs):
-        assert mmb.filter_quote(input) == output
+        assert mmb.process_quote(input) == output
