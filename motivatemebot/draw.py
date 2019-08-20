@@ -1,14 +1,8 @@
-import os
-import sys
+from PIL import ImageDraw, ImageFont
 
-import numpy as np
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
-
-from blur import constant_blur, draw_box, gradient_blur
-from image_sizing import get_boundary, get_box_corners, get_image
-from text_color import (average_color, average_contrast_color,
-                        check_image_colors, get_all_luminances,
-                        overall_contrast_color, select_region_and_color)
+from blur import draw_box, gradient_blur
+from image_sizing import get_boundary
+from text_color import overall_contrast_color
 
 
 def draw_quote_in_box(img,

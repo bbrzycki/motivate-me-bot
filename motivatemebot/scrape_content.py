@@ -1,33 +1,25 @@
-import json
-import os
 import shutil
-import sys
 import time
-from pprint import pprint
 
 import requests
 import tweepy
 
-from image_sizing import get_boundary, get_box_corners, get_image
-from screen_tweets import (check_quote_quality, contains_emoji,
-                           contains_hashtag, ends_with_punctuation,
-                           is_appropriate, is_punctuation, is_website,
-                           screen_image_tweet, screen_quote_tweet)
-from text_color import (average_color, average_contrast_color,
-                        check_image_colors, get_all_luminances,
-                        overall_contrast_color, select_region_and_color)
-from text_filtering import filter_quote, filter_name
-from text_sizing import (check_footer_width, check_quote_width, credit_width,
-                         full_credits_width, quote_width, signature_width)
+from image_sizing import get_image
+from check_tweets import is_appropriate, check_image_tweet, check_quote_tweet
+from text_processing import process_quote, process_name
 
 
-def setup_api(consumer_key, consumer_secret, access_token, access_token_secret):
+def setup_api(consumer_key,
+              consumer_secret,
+              access_token,
+              access_token_secret,
+              wait_on_rate_limit=True):
     '''
     Set up api for Twitter interactions using tweepy.
     '''
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
-    return tweepy.API(auth)
+    return tweepy.API(auth, wait_on_rate_limit=wait_on_rate_limit)
 
 
 def search_keyword(api,
@@ -85,10 +77,10 @@ def find_twitter_image(api,
                         # Check whether the image is good (for color / tweet content)
                         img = get_image(filename)
                         print('Image:', full_text)
-                        if screen_image_tweet(img,
-                                              name,
-                                              screen_name,
-                                              footer_font_file=footer_font_file):
+                        if check_image_tweet(img,
+                                             name,
+                                             screen_name,
+                                             footer_font_file=footer_font_file):
                             return name, screen_name, referral_url, filename
         # Wait a bit before searching again
         print('Resuming image search in 60 seconds...')
@@ -136,18 +128,20 @@ def find_unsplash_image(unsplash_access_key,
                         shutil.copyfileobj(response.raw, outfile)
                     del response
 
-                    # Check whether the image is good (for color / tweet content)
+                    # Check whether the image is good (for color / tweet
+                    # content)
                     img = get_image(filename)
                     print('Image:', image_id)
-                    if screen_image_tweet(img,
-                                          name,
-                                          screen_name,
-                                          footer_font_file=footer_font_file):
+                    if check_image_tweet(img,
+                                         name,
+                                         screen_name,
+                                         footer_font_file=footer_font_file):
                         # Image selected! Passed color test for all text
-                        # Send request to download credit endpoint @ Unsplash API
+                        # Send request to download credit endpoint via
+                        # Unsplash API
                         response = requests.get(download_location + '?client_id=%s' % unsplash_access_key)
                         if response.status_code == 200:
-                            name = filter_name(name, verbose=True)
+                            name = process_name(name, verbose=True)
                             return name, screen_name, html_image_url, filename
                         else:
                             raise requests.exceptions.HTTPError
@@ -180,14 +174,14 @@ def find_quote(api,
                 full_text = tweet_dict['full_text']
 
                 if is_appropriate(name, screen_name, full_text, tweet_type='quote'):
-                    filtered_text = filter_quote(full_text, verbose=verbose)
-                    if screen_quote_tweet(img,
-                                          name,
-                                          screen_name,
-                                          filtered_text,
-                                          quote_font_file=quote_font_file,
-                                          footer_font_file=footer_font_file):
-                        name = filter_name(name, verbose=True)
+                    filtered_text = process_quote(full_text, verbose=verbose)
+                    if check_quote_tweet(img,
+                                         name,
+                                         screen_name,
+                                         filtered_text,
+                                         quote_font_file=quote_font_file,
+                                         footer_font_file=footer_font_file):
+                        name = process_name(name, verbose=True)
                         return name, screen_name, tweet_id_str, filtered_text
         # Wait a bit before searching again
         print('Resuming quote search in 60 seconds...')

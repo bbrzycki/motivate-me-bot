@@ -2,23 +2,12 @@ import errno
 import os
 import tweepy
 
-from blur import constant_blur, draw_box, gradient_blur
-from determine_tweet_content import (attribution_length, attribution_text,
-                                     find_hashtags)
+from determine_tweet_content import attribution_text, find_hashtags
 from draw import draw_credits, draw_quote_in_box, draw_signature
-from image_sizing import get_boundary, get_box_corners, get_image
-from scrape_content import find_twitter_image, find_unsplash_image, find_quote, search_keyword, setup_api
-from screen_tweets import (check_quote_quality, contains_emoji,
-                           contains_hashtag, ends_with_punctuation,
-                           is_appropriate, is_punctuation, is_website,
-                           screen_image_tweet, screen_quote_tweet)
-from text_color import (average_color, average_contrast_color,
-                        check_image_colors, get_all_luminances,
-                        overall_contrast_color, select_region_and_color)
-from text_filtering import filter_quote
+from image_sizing import get_box_corners, get_image
+from scrape_content import find_twitter_image, find_unsplash_image, find_quote
+from text_color import select_region_and_color
 from text_formatting import fit_text_to_box
-from text_sizing import (check_footer_width, check_quote_width, credit_width,
-                         full_credits_width, quote_width, signature_width)
 
 
 def create_combined_image(twitter_api,

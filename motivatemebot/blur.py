@@ -1,10 +1,7 @@
-import os
-import sys
-
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import ImageDraw, ImageFilter
 
-from image_sizing import get_boundary, get_box_corners, get_image
+from image_sizing import get_boundary
 
 
 def draw_box(img, box, line_width=1):

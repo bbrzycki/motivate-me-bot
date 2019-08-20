@@ -1,10 +1,8 @@
-import os
 import sys
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-from image_sizing import get_boundary, get_box_corners, get_image
+from image_sizing import get_boundary, get_box_corners
 
 
 BLACK = (0, 0, 0)
