@@ -23,7 +23,7 @@ def test_punctuation():
 
 def test_ends_with_punctuation():
     # Excluding newline characters
-    assert mmb.ends_with_punctuation('hi')
+    assert not mmb.ends_with_punctuation('hi')
     assert mmb.ends_with_punctuation('hi.')
     assert not mmb.ends_with_punctuation('hi.hi')
     assert not mmb.ends_with_punctuation('hi\n')
