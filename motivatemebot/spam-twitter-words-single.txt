@@ -3,15 +3,25 @@ blog
 bumble
 click
 client
+clients
 clip
 coupon
+customer
+customers
 detox
 discount
 download
 Dr
 Dr.
 emoji
+employee
+employer
+employees
+employers
 entrepreneur
+entrepreneurs
+expenditure
+expenditures
 facebook
 followers
 garage sale
@@ -19,13 +29,16 @@ giveaway
 hashtag
 here's
 i
+if you agree
 IG
+income
 instagram
 join us
 landlord
 like if
 log in
 login
+me
 merchandise
 Miss
 Mr
@@ -39,6 +52,7 @@ nfl
 our
 please follow
 please like
+professional
 propertymanagement
 quote of the day
 realestate
@@ -67,4 +81,6 @@ ways to
 ways you can
 we
 website
+write
+writing
 youtube
