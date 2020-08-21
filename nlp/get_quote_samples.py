@@ -1,3 +1,7 @@
+"""
+Collect tweets should would pass the non-ML filters and save to a csv for manual labeling.
+"""
+
 from context import motivatemebot as mmb
 import pandas as pd
 import tweepy
