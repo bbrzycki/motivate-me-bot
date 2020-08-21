@@ -1,4 +1,7 @@
-# motivate-me-bot [![Build Status](https://travis-ci.org/bbrzycki/motivate-me-bot.svg?branch=master)](https://travis-ci.org/bbrzycki/motivate-me-bot) [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+# motivate-me-bot [![Build Status](https://travis-ci.org/bbrzycki/motivate-me-bot.svg?branch=master)](https://travis-ci.org/bbrzycki/motivate-me-bot)
+
+![](images/2019-09-27.jpg)
+
 ### @MotivateMeBot is a Twitter bot that makes motivational pictures by combining pictures with tweets!
 
 @MotivateMeBot is currently hosted on Heroku, running regularly using a scheduler. The bot selects images from [Unsplash](https://unsplash.com/?utm_source=MotivateMeBot&utm_medium=referral)'s excellent collection of high quality, royalty-free photos, via their API service. And of course, it uses the Twitter API to find tweets and post new remixed images.
