@@ -1,3 +1,0 @@
-[submodule "nlp/bert_analysis/bert"]
-	path = nlp/bert_analysis/bert
-	url = git@github.com:google-research/bert.git
