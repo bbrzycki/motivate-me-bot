@@ -1,0 +1,6 @@
+[submodule "nlp/bert_analysis/--force"]
+	path = nlp/bert_analysis/--force
+	url = https://github.com/google-research/bert.git
+[submodule "nlp/bert_analysis/bert"]
+	path = nlp/bert_analysis/bert
+	url = https://github.com/google-research/bert.git
